@@ -1,0 +1,47 @@
+{
+  "name": "pigato",
+  "version": "0.0.1",
+  "private": false,
+  "description": "A ZeroMQ based microservices framework for NodeJS",
+  "author": "prdn <paolo.ardoino@gmail.com> (http://ardoino.com/)",
+  "keywords": [
+    "nodejs",
+    "zmq",
+    "zeromq",
+    "0mq",
+    "request-reply",
+    "amqp",
+    "mdp",
+    "micro-services"
+  ],
+  "dependencies": {
+    "debug": "~2.0.0",
+    "readable-stream": "~1.0.32",
+    "shortid": "~2.0.1",
+    "zmq": "~2.8.0"
+  },
+  "engine": {
+    "node": ">=0.10"
+  },
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "devDependencies": {
+    "chai": "~1.9.2",
+	"mocha": "~1.21.4"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prdn/pigato.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prdn/pigato/issues"
+  },
+  "homepage": "https://github.com/prdn/pigato"
+}
