@@ -1,5 +1,5 @@
 var cluster = require('cluster');
-var omdp = require('../');
+var omdp = require('../../');
 
 var chunk = 'foo',
 probes = 100000;
@@ -57,8 +57,6 @@ if (cluster.isMaster) {
 			for (var i = 0; i < probes; i++) {
 				client.request(
 					'echo', chunk,
-					undefined,
-					undefined,
 					{ timeout: -1 }
 				).on('end', function() {
 					acc();
