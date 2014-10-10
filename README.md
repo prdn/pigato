@@ -131,11 +131,15 @@ client.request('my-service', 'foo', function (err, data) {
 
 #### Roadmap
 * Add authentication support through [zmq-zap](https://github.com/msealand/zmq-zap.node) ZeroMQ ZAP to trust Clients and Workers.
+* Support [Titanic Service Protocol](http://rfc.zeromq.org/spec:9) for peristent requests.
 
 #### Follow me
 
 * Fincluster - cloud financial platform : [fincluster](http://fincluster.com) /  [@fincluster](https://twitter.com/fincluster)
 * My personal blog : [ardoino.com](http://ardoino.com) / [@paoloardoino](https://twitter.com/paoloardoino)
+
+#### Contributors
+* [bmeck](https://github.com/bmeck)
 
 #### Credits
 Based on https://github.com/nuh-temp/zmq-mdp2 project
