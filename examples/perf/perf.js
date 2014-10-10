@@ -1,5 +1,5 @@
 var cluster = require('cluster');
-var omdp = require('../../');
+var pigato = require('../../');
 
 var chunk = 'foo',
 probes = 100000;
@@ -17,7 +17,7 @@ if (cluster.isMaster) {
 	var workerID = cluster.worker.workerID;
 	switch (+workerID) {
 		case 1:
-			var broker = new omdp.Broker('tcp://127.0.0.1:55559');
+			var broker = new pigato.Broker('tcp://*:55559');
 			broker.start(function() {
 				console.log("BROKER started");
 			});
@@ -25,7 +25,7 @@ if (cluster.isMaster) {
 		case 2:
 			for (var i = 0; i < 1; i++) {
 				(function(i) {
-					var worker = new omdp.Worker('tcp://127.0.0.1:55559', 'echo');
+					var worker = new pigato.Worker('tcp://127.0.0.1:55559', 'echo');
 					worker.on('request', function(inp, res) {
 						res.end(inp + 'FINAL');
 					});
@@ -34,7 +34,7 @@ if (cluster.isMaster) {
 			}
 		break;
 		case 3:
-			var client = new omdp.Client('tcp://127.0.0.1:55559');
+			var client = new pigato.Client('tcp://127.0.0.1:55559');
 			client.start();
 			
 			var timer = process.hrtime();
@@ -58,7 +58,9 @@ if (cluster.isMaster) {
 				client.request(
 					'echo', chunk,
 					{ timeout: -1 }
-				).on('end', function() {
+				)
+				.on('data', function() {})
+				.on('end', function() {
 					acc();
 				});
 			}
