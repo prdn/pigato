@@ -10,18 +10,24 @@ The goal is to offer a reliable and extensible service-oriented request-reply in
 * Client : creates, pushes requests and waits for results (if needed). A request always includes a service and a payload/data for the Worker
 * Broker : handles requests queueing and routing
 
+#### Examples
+
+* Broker `examples/broker.js`
+* Worker `examples/echo/echo_worker.js`
+* Client `examples/echo/echo_client.js`
+
 ### API
 
 #### `pigato.Broker(socket_str)`
 
 Simply starts up a broker.
 
-````
+```
 var Broker = require('./../index').Broker;
 
 var broker = new Broker("tcp://*:55555");
 broker.start(function(){});
-````
+```
 
 #### `pigato.Worker(socket_str, service_name)`
 
@@ -39,7 +45,7 @@ Worker receives `"request"` events that contain 2 arguments:
 * `ended` - tells (boolean) if the request has been ended.
 
 
-````
+```
 var worker = new pigato.Worker('tcp://localhost:12345', 'MyService');
 
 worker.on('request', function(data, reply) {
@@ -53,7 +59,7 @@ worker.on('request', function(data, reply) {
 	}
 	res.end('FINAL DATA');
 });
-````
+```
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
 
@@ -65,7 +71,7 @@ Clients may make requests using `Client.request(...)` method.
 * `data` - data to give to the service (string/object/buffer)
 * `opts` - options object for the request
 
-````
+```
 var client = new pigato.Worker('tcp://localhost:12345');
 
 client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
@@ -78,7 +84,7 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('end', function() {
 	console.log("END");	  
 });
-````
+```
 
 Clients may also make request with partial and final callbacks instead of using streams.
 
@@ -88,7 +94,7 @@ Clients may also make request with partial and final callbacks instead of using 
 * `finalCallback(err, data)` - called when the request will emit no more data
 * `opts`
 
-````
+```
 client.request('my-service', 'foo', function (err, data) {
   // frames sent prior to final frame
   console.log('PARTIAL', data);
@@ -97,7 +103,7 @@ client.request('my-service', 'foo', function (err, data) {
   console.log('FINAL', data);
 }, { timeout: 30000 });
 
-````
+```
 
 ##### Request options
 * `timeout` : default 60000 (60 seconds). Set -1 to disable (time unlimited request)
