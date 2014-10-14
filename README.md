@@ -1,7 +1,7 @@
 Pigato
 ========
 
-[![PIGATO](http://ardoino.com/pub/pigato-200.png)](https://github.com/rdn/pigato)
+[![PIGATO](http://ardoino.com/pub/pigato-200.png)](https://github.com/prdn/pigato)
 
 
 A ZeroMQ based microservices framework for NodeJS.
