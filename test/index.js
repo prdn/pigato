@@ -168,4 +168,46 @@ describe('BASE', function() {
 			done();
 		}
 	});
+
+	it('Client error timeout (stream)', function(done) {
+		this.timeout(3000);
+
+		var client = new omdp.Client(location);
+		client.start();
+
+		client.request(
+			'test', 'foo',
+			{ timeout: 1000 }
+		).on('error', function(err) {
+			chai.assert.equal(err, 'C_TIMEOUT');
+			stop();	
+		});
+
+		function stop() {
+			client.stop();
+			done();
+		}
+	});
+
+	it('Client error timeout (callback)', function(done) {
+		this.timeout(3000);
+		
+		var client = new omdp.Client(location);
+		client.start();
+
+		client.request(
+			'test', 'foo',
+			undefined,
+			function(err, data) {
+				chai.assert.equal(err, 'C_TIMEOUT');
+				stop();	
+			},
+			{ timeout: 1000 }
+		);
+
+		function stop() {
+			client.stop();
+			done();
+		}
+	});
 });
