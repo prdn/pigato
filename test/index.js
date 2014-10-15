@@ -170,7 +170,7 @@ describe('BASE', function() {
 	});
 
 	it('Client error timeout (stream)', function(done) {
-		this.timeout(3000);
+		this.timeout(5000);
 
 		var client = new omdp.Client(location);
 		client.start();
@@ -190,7 +190,7 @@ describe('BASE', function() {
 	});
 
 	it('Client error timeout (callback)', function(done) {
-		this.timeout(3000);
+		this.timeout(5000);
 		
 		var client = new omdp.Client(location);
 		client.start();
