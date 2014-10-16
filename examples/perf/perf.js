@@ -55,14 +55,16 @@ if (cluster.isMaster) {
 			}
 
 			for (var i = 0; i < probes; i++) {
-				client.request(
-					'echo', chunk,
-					{ timeout: -1 }
-				)
-				.on('data', function() {})
-				.on('end', function() {
-					acc();
-				});
+				(function(i) {
+					client.request(
+						'echo', chunk,
+						{ timeout: -1 }
+					)
+					.on('data', function() {})
+					.on('end', function() {
+						acc();
+					});
+				})(i);
 			}
 		break;
 	}
