@@ -1,8 +1,9 @@
 var cluster = require('cluster');
 var pigato = require('../../');
 
-var chunk = 'foo',
-probes = 100000;
+var chunk = 'foo';
+var wnum = process.argv[2] || 1;
+var probes = process.argv[3] || 50000;
 
 if (cluster.isMaster) {
 	for (var i = 0; i < 3; i++) {
@@ -23,17 +24,21 @@ if (cluster.isMaster) {
 			});
 		break;
 		case 2:
-			for (var i = 0; i < 1; i++) {
+			console.log(wnum + " WORKERS created");
+			for (var i = 0; i < wnum; i++) {
 				(function(i) {
 					var worker = new pigato.Worker('tcp://127.0.0.1:55559', 'echo');
 					worker.on('request', function(inp, res) {
 						res.end(inp + 'FINAL');
+						//console.log("WORKER " + i);
 					});
 					worker.start();
 				})(i);
 			}
 		break;
 		case 3:
+			console.log(probes + " CLIENT requests");
+
 			var client = new pigato.Client('tcp://127.0.0.1:55559');
 			client.start();
 			
