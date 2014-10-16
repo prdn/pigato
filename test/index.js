@@ -1,16 +1,16 @@
-var omdp = require('../');
+var PIGATO = require('../');
 var chai = require('chai');
 
 var location = 'inproc://#1';
 
 describe('BASE', function() {
-	var broker = new omdp.Broker(location)
+	var broker = new PIGATO.Broker(location)
 	broker.start(function() {});
 
 	it('Client partial/final request (stream)', function(done) {
 		var chunk = 'foo';
 
-		var worker = new omdp.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, 'test');
 
 		worker.on('request', function(inp, res) {
 			for (var i = 0; i < 5; i++) {
@@ -21,7 +21,7 @@ describe('BASE', function() {
 
 		worker.start();
 
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		var repIx = 0;
@@ -44,7 +44,7 @@ describe('BASE', function() {
 	it('Client partial/final request (callback)', function(done) {
 		var chunk = 'foo';
 
-		var worker = new omdp.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, 'test');
 
 		worker.on('request', function(inp, res) {
 			for (var i = 0; i < 5; i++) {
@@ -55,7 +55,7 @@ describe('BASE', function() {
 
 		worker.start();
 
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		var repIx = 0;
@@ -81,7 +81,7 @@ describe('BASE', function() {
 	it('JSON Client partial/final request (callback)', function(done) {
 		var chunk = { foo: 'bar' };
 
-		var worker = new omdp.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, 'test');
 
 		worker.on('request', function(inp, res) {
 			res.end(chunk);
@@ -89,7 +89,7 @@ describe('BASE', function() {
 
 		worker.start();
 
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		var repIx = 0;
@@ -113,7 +113,7 @@ describe('BASE', function() {
 	it('Client error request (stream)', function(done) {
 		var chunk = 'SOMETHING_FAILED';
 
-		var worker = new omdp.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, 'test');
 
 		worker.on('request', function(inp, res) {
 			res.error(chunk);
@@ -121,7 +121,7 @@ describe('BASE', function() {
 
 		worker.start();
 
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
@@ -141,7 +141,7 @@ describe('BASE', function() {
 	it('Client error request (callback)', function(done) {
 		var chunk = 'SOMETHING_FAILED';
 
-		var worker = new omdp.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, 'test');
 
 		worker.on('request', function(inp, res) {
 			res.error(chunk);
@@ -149,7 +149,7 @@ describe('BASE', function() {
 
 		worker.start();
 
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
@@ -172,7 +172,7 @@ describe('BASE', function() {
 	it('Client error timeout (stream)', function(done) {
 		this.timeout(5000);
 
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
@@ -192,7 +192,7 @@ describe('BASE', function() {
 	it('Client error timeout (callback)', function(done) {
 		this.timeout(5000);
 		
-		var client = new omdp.Client(location);
+		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
