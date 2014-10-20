@@ -2,8 +2,8 @@ var cluster = require('cluster');
 var pigato = require('../../');
 
 var chunk = 'foo';
-var wnum = process.argv[2] || 1;
-var probes = process.argv[3] || 50000;
+var wnum = +(process.argv[2] || 1);
+var probes = +(process.argv[3] || 10000);
 
 if (cluster.isMaster) {
 	for (var i = 0; i < 3; i++) {

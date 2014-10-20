@@ -1,6 +1,6 @@
 {
   "name": "pigato",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "description": "A ZeroMQ based microservices framework for NodeJS",
   "author": "prdn <paolo.ardoino@gmail.com> (http://ardoino.com/)",
@@ -15,6 +15,7 @@
     "micro-services"
   ],
   "dependencies": {
+	"async": "~0.9.0",
     "debug": "~2.0.0",
     "readable-stream": "~1.0.32",
     "shortid": "~2.0.1",
