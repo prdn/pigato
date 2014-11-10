@@ -110,6 +110,45 @@ describe('BASE', function() {
 		}
 	});
 
+	it('Worker reject', function(done) {
+    this.timeout(10 * 1000);
+		var chunk = 'NOT_MY_JOB';
+		var chunk_2 = 'DID_MY_JOB';
+
+    var workers = [];
+    function addWorker(fn) {
+      var worker = new PIGATO.Worker(location, 'test');
+
+      worker.on('request', fn);
+
+      worker.start(); 
+    };
+
+    addWorker(function(inp, res) {
+      res.reject(chunk);
+      addWorker(function (inp, res) {
+        res.end(chunk_2);
+      });
+    });
+
+		var client = new PIGATO.Client(location);
+		client.start();
+
+		client.request(
+			'test', chunk
+		).on('data', function (data) {
+			chai.assert.equal(data, chunk_2);
+    }).on('end', function() {
+			stop();
+		});
+
+		function stop() {
+			workers.forEach(function (worker) { worker.stop(); });
+			client.stop();
+			done();
+		}
+	});
+
 	it('Client error request (stream)', function(done) {
 		var chunk = 'SOMETHING_FAILED';
 
