@@ -1,16 +1,19 @@
 var PIGATO = require('../');
 var chai = require('chai');
+var uuid = require('shortid');
 
 var location = 'inproc://#1';
 
 describe('BASE', function() {
+	var ns = uuid.generate();
+
 	var broker = new PIGATO.Broker(location)
 	broker.start(function() {});
 
 	it('Client partial/final request (stream)', function(done) {
 		var chunk = 'foo';
 
-		var worker = new PIGATO.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, ns);
 
 		worker.on('request', function(inp, res) {
 			for (var i = 0; i < 5; i++) {
@@ -27,7 +30,7 @@ describe('BASE', function() {
 		var repIx = 0;
 
 		client.request(
-			'test', chunk
+			ns, chunk
 		).on('data', function(data) {
 			chai.assert.equal(data, String(chunk + (repIx++)));
 		}).on('end', function() {
@@ -42,9 +45,10 @@ describe('BASE', function() {
 	});
 
 	it('Client partial/final request (callback)', function(done) {
+		var ns = uuid.generate();
 		var chunk = 'foo';
 
-		var worker = new PIGATO.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, ns);
 
 		worker.on('request', function(inp, res) {
 			for (var i = 0; i < 5; i++) {
@@ -61,7 +65,7 @@ describe('BASE', function() {
 		var repIx = 0;
 
 		client.request(
-			'test', chunk,
+			ns, chunk,
 			function(err, data) {
 				chai.assert.equal(data, chunk + (repIx++));
 			}, 
@@ -81,7 +85,7 @@ describe('BASE', function() {
 	it('JSON Client partial/final request (callback)', function(done) {
 		var chunk = { foo: 'bar' };
 
-		var worker = new PIGATO.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, ns);
 
 		worker.on('request', function(inp, res) {
 			res.end(chunk);
@@ -95,7 +99,7 @@ describe('BASE', function() {
 		var repIx = 0;
 
 		client.request(
-			'test', 'foo',
+			ns, 'foo',
 			undefined,
 			function(err, data) {
 				chai.assert.deepEqual(data, chunk);
@@ -111,34 +115,36 @@ describe('BASE', function() {
 	});
 
 	it('Worker reject', function(done) {
-    this.timeout(10 * 1000);
+		this.timeout(10 * 1000);
+
+		var ns = uuid.generate();
 		var chunk = 'NOT_MY_JOB';
 		var chunk_2 = 'DID_MY_JOB';
 
-    var workers = [];
-    function addWorker(fn) {
-      var worker = new PIGATO.Worker(location, 'test');
+		var workers = [];
 
-      worker.on('request', fn);
+		function addWorker(fn) {
+			var worker = new PIGATO.Worker(location, ns);
+			worker.on('request', fn);
 
-      worker.start(); 
-    };
+			worker.start(); 
+		};
 
-    addWorker(function(inp, res) {
-      res.reject(chunk);
-      addWorker(function (inp, res) {
-        res.end(chunk_2);
-      });
-    });
+		addWorker(function(inp, res) {
+			res.reject(chunk);
+			addWorker(function (inp, res) {
+				res.end(chunk_2);
+			});
+		});
 
 		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
-			'test', chunk
+			ns, chunk
 		).on('data', function (data) {
 			chai.assert.equal(data, chunk_2);
-    }).on('end', function() {
+		}).on('end', function() {
 			stop();
 		});
 
@@ -150,9 +156,10 @@ describe('BASE', function() {
 	});
 
 	it('Client error request (stream)', function(done) {
+		var ns = uuid.generate();
 		var chunk = 'SOMETHING_FAILED';
 
-		var worker = new PIGATO.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, ns);
 
 		worker.on('request', function(inp, res) {
 			res.error(chunk);
@@ -164,7 +171,7 @@ describe('BASE', function() {
 		client.start();
 
 		client.request(
-			'test', chunk
+			ns, chunk
 		).on('error', function(err) {
 			chai.assert.equal(err, chunk);
 			stop();
@@ -178,9 +185,10 @@ describe('BASE', function() {
 	});
 
 	it('Client error request (callback)', function(done) {
+		var ns = uuid.generate();
 		var chunk = 'SOMETHING_FAILED';
 
-		var worker = new PIGATO.Worker(location, 'test');
+		var worker = new PIGATO.Worker(location, ns);
 
 		worker.on('request', function(inp, res) {
 			res.error(chunk);
@@ -192,7 +200,7 @@ describe('BASE', function() {
 		client.start();
 
 		client.request(
-			'test', chunk,
+			ns, chunk,
 			undefined,
 			function(err, data) {
 				chai.assert.equal(err, chunk);
@@ -211,11 +219,13 @@ describe('BASE', function() {
 	it('Client error timeout (stream)', function(done) {
 		this.timeout(5000);
 
+		var ns = uuid.generate();
+
 		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
-			'test', 'foo',
+			ns, 'foo',
 			{ timeout: 1000 }
 		).on('error', function(err) {
 			chai.assert.equal(err, 'C_TIMEOUT');
@@ -230,12 +240,12 @@ describe('BASE', function() {
 
 	it('Client error timeout (callback)', function(done) {
 		this.timeout(5000);
-		
+
 		var client = new PIGATO.Client(location);
 		client.start();
 
 		client.request(
-			'test', 'foo',
+			ns, 'foo',
 			undefined,
 			function(err, data) {
 				chai.assert.equal(err, 'C_TIMEOUT');
