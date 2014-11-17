@@ -123,16 +123,17 @@ describe('BASE', function() {
 
 		var workers = [];
 
-		function addWorker(fn) {
+		function spawn(fn) {
 			var worker = new PIGATO.Worker(location, ns);
 			worker.on('request', fn);
-
-			worker.start(); 
+			
+			worker.start();
+			workers.push(worker);
 		};
 
-		addWorker(function(inp, res) {
+		spawn(function(inp, res) {
 			res.reject(chunk);
-			addWorker(function (inp, res) {
+			spawn(function(inp, res) {
 				res.end(chunk_2);
 			});
 		});
@@ -142,14 +143,16 @@ describe('BASE', function() {
 
 		client.request(
 			ns, chunk
-		).on('data', function (data) {
+		).on('data', function(data) {
 			chai.assert.equal(data, chunk_2);
 		}).on('end', function() {
 			stop();
 		});
 
 		function stop() {
-			workers.forEach(function (worker) { worker.stop(); });
+			workers.forEach(function(worker) { 
+				worker.stop(); 
+			});
 			client.stop();
 			done();
 		}

@@ -43,6 +43,7 @@ Worker receives `"request"` events that contain 2 arguments:
 
 * `write()` - sends partial data to the client (triggers partial callback). It is used internally to implement writable streams.
 * `end()` - sends last data to the client (triggers final callback) and completes/closes current request. Use this method for single-reply requests.
+* `reject()` - rejects a request.
 * `heartbeat()` - forces sending heartbeat to the broker and client
 * `active()` - returns (boolean) the status of the request. A request becomes inactive when the worker disconnects from the broker or it is discarded by the client or the client disconnects from the broker. This is useful for long running tasks and Worker can monitor whether or not continue processing a request.
 * `ended` - tells (boolean) if the request has been ended.
