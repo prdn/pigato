@@ -1,9 +1,13 @@
 var cluster = require('cluster');
 var pigato = require('../../');
+var async = require('async');
+var _ = require('lodash');
 
 var chunk = 'foo';
 var wnum = +(process.argv[2] || 1);
 var probes = +(process.argv[3] || 10000);
+var blocks = 5000;
+var bltmo = 500;
 
 if (cluster.isMaster) {
   for (var i = 0; i < 3; i++) {
@@ -29,6 +33,7 @@ if (cluster.isMaster) {
       (function(i) {
         var worker = new pigato.Worker('tcp://127.0.0.1:55559', 'echo');
         worker.on('request', function(inp, res) {
+          //res.opts.cache = 1;
           res.end(inp + 'FINAL');
           //console.log("WORKER " + i);
         });
@@ -42,7 +47,7 @@ if (cluster.isMaster) {
     var client = new pigato.Client('tcp://127.0.0.1:55559');
     client.start();
 
-    var timer = process.hrtime();
+    var timer;
     var rcnt = 0;
 
     function acc() {
@@ -59,18 +64,33 @@ if (cluster.isMaster) {
       process.exit(-1);
     }
 
-    for (var i = 0; i < probes; i++) {
-      (function(i) {
-        client.request(
-          'echo', chunk,
-          { timeout: -1 }
-        )
-        .on('data', function() {})
-        .on('end', function() {
-          acc();
+    var waves = Math.ceil(probes / blocks);
+    var queue = [];
+    var sent = 0;
+
+    for (var k = 0; k < waves; k++) {
+      (function(k) { 
+        queue.push(function(next) {
+          console.log("WAVE", (k + 1));
+          for (var i = 0; i < blocks && sent < probes; i++) {
+            client.request(
+              'echo', chunk,
+              { timeout: -1 }
+            )
+            .on('data', function() {})
+            .on('end', function() {
+              acc();
+            });
+          }
+          setTimeout(next, bltmo);
         });
-      })(i);
+      })(k);
     }
+
+    setTimeout(function() {
+      timer = process.hrtime();
+      async.series(queue);
+    }, 2000);
     break;
   }
 }
