@@ -7,7 +7,7 @@ var chunk = 'foo';
 var wnum = +(process.argv[2] || 1);
 var probes = +(process.argv[3] || 10000);
 var blocks = 5000;
-var bltmo = 500;
+var bltmo = 250;
 
 if (cluster.isMaster) {
   for (var i = 0; i < 3; i++) {
@@ -33,7 +33,7 @@ if (cluster.isMaster) {
       (function(i) {
         var worker = new pigato.Worker('tcp://127.0.0.1:55559', 'echo');
         worker.on('request', function(inp, res) {
-          //res.opts.cache = 1;
+          //res.opts.cache = 10000;
           res.end(inp + 'FINAL');
           //console.log("WORKER " + i);
         });
