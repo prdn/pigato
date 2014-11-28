@@ -19,6 +19,8 @@ The goal is to offer a reliable and extensible service-oriented request-reply in
 * Worker `examples/echo/echo_worker.js`
 * Client `examples/echo/echo_client.js`
 
+[PIGATO-EXAMPLES](https://github.com/fincluster/pigato-examples) : a collection of multi-purpose useful examples.
+
 ### API
 
 #### `pigato.Broker(socket_str)`
