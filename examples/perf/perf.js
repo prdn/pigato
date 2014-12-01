@@ -65,7 +65,7 @@ if (cluster.isMaster) {
     function send() {
       for (var k = 0; k < probes; k++) {
         client.request(
-          'echo', chunk,
+          'echo', chunk + (k % 1000),
           { timeout: -1 }
         )
         .on('data', function() {})
