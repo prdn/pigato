@@ -31,7 +31,7 @@ if (cluster.isMaster) {
       (function(i) {
         var worker = new pigato.Worker('tcp://127.0.0.1:55559', 'echo');
         worker.on('request', function(inp, res) {
-          //res.opts.cache = 10000;
+          res.opts.cache = 20000;
           res.end(inp + 'FINAL');
           //console.log("WORKER " + i);
         });
