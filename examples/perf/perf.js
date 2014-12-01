@@ -6,8 +6,6 @@ var _ = require('lodash');
 var chunk = 'foo';
 var wnum = +(process.argv[2] || 1);
 var probes = +(process.argv[3] || 10000);
-var blocks = 5000;
-var bltmo = 250;
 
 if (cluster.isMaster) {
   for (var i = 0; i < 3; i++) {
@@ -64,32 +62,22 @@ if (cluster.isMaster) {
       process.exit(-1);
     }
 
-    var waves = Math.ceil(probes / blocks);
-    var queue = [];
-    var sent = 0;
-
-    for (var k = 0; k < waves; k++) {
-      (function(k) { 
-        queue.push(function(next) {
-          console.log("WAVE", (k + 1));
-          for (var i = 0; i < blocks && sent < probes; i++) {
-            client.request(
-              'echo', chunk,
-              { timeout: -1 }
-            )
-            .on('data', function() {})
-            .on('end', function() {
-              acc();
-            });
-          }
-          setTimeout(next, bltmo);
+    function send() {
+      for (var k = 0; k < probes; k++) {
+        client.request(
+          'echo', chunk,
+          { timeout: -1 }
+        )
+        .on('data', function() {})
+        .on('end', function() {
+          acc();
         });
-      })(k);
+      }
     }
 
     setTimeout(function() {
       timer = process.hrtime();
-      async.series(queue);
+      send();
     }, 2000);
     break;
   }
