@@ -20,7 +20,7 @@ if (cluster.isMaster) {
   var workerID = cluster.worker.workerID;
   switch (+workerID) {
     case 1:
-      var broker = new pigato.Broker('tcp://*:55559');
+    var broker = new pigato.Broker('tcp://*:55559');
     broker.start(function() {
       console.log("BROKER started");
     });
