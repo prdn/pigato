@@ -5,12 +5,11 @@ var uuid = require('shortid');
 var location = 'inproc://#1';
 
 describe('BASE', function() {
-  var ns = uuid.generate();
-
   var broker = new PIGATO.Broker(location)
   broker.start(function() {});
 
   it('Client partial/final request (stream)', function(done) {
+    var ns = uuid.generate();
     var chunk = 'foo';
 
     var worker = new PIGATO.Worker(location, ns);
@@ -83,6 +82,7 @@ describe('BASE', function() {
   });
 
   it('JSON Client partial/final request (callback)', function(done) {
+    var ns = uuid.generate();
     var chunk = { foo: 'bar' };
 
     var worker = new PIGATO.Worker(location, ns);
@@ -115,9 +115,9 @@ describe('BASE', function() {
   });
 
   it('Worker reject', function(done) {
+    var ns = uuid.generate();
     this.timeout(10 * 1000);
 
-    var ns = uuid.generate();
     var chunk = 'NOT_MY_JOB';
     var chunk_2 = 'DID_MY_JOB';
 
@@ -220,9 +220,8 @@ describe('BASE', function() {
   });
 
   it('Client error timeout (stream)', function(done) {
-    this.timeout(5000);
-
     var ns = uuid.generate();
+    this.timeout(5000);
 
     var client = new PIGATO.Client(location);
     client.start();
@@ -242,6 +241,7 @@ describe('BASE', function() {
   });
 
   it('Client error timeout (callback)', function(done) {
+    var ns = uuid.generate();
     this.timeout(5000);
 
     var client = new PIGATO.Client(location);
