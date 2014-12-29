@@ -61,17 +61,17 @@ worker.on('request', function(data, reply) {
 // or
 worker.on('request', function(data, reply) {
   for (var i = 0; i < 1000; i++) {
-    res.write('PARTIAL DATA ' + i);
+    reply.write('PARTIAL DATA ' + i);
   }
-  res.end('FINAL DATA');
+  reply.end('FINAL DATA');
 });
 ```
 
 Worker may also specify whether the reply should be cached and the cache timeout in milliseconds 
 ```
 worker.on('request', function(data, reply) {
-  res.opts.cache = 1000; // cache reply for 1 second
-  res.end('FINAL DATA');
+  reply.opts.cache = 1000; // cache reply for 1 second
+  reply.end('FINAL DATA');
 });
 ```
 
