@@ -23,7 +23,7 @@ The goal is to offer a reliable and extensible service-oriented request-reply in
 
 ### API
 
-#### `pigato.Broker(socket_str)`
+#### `pigato.Broker(addr)`
 
 Simply starts up a broker.
 
@@ -34,7 +34,7 @@ var broker = new Broker("tcp://*:55555");
 broker.start(function(){});
 ```
 
-#### `pigato.Worker(socket_str, service_name)`
+#### `pigato.Worker(addr, service_name)`
 
 Worker receives `"request"` events that contain 2 arguments:
 
@@ -77,7 +77,8 @@ worker.on('request', function(data, reply) {
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
 
-#### `pigato.Client(socket_str)`
+#### `pigato.Client(addrs)`
+* `addrs` - list of Broker addresses (array)
 
 Clients may make requests using `Client.request(...)` method.
 
