@@ -17,7 +17,7 @@ if (cluster.isMaster) {
     }
   });
 } else {
-  var workerID = cluster.worker.id;
+  var workerID = cluster.worker.workerID || cluster.worker.id;
   if (workerID <= bnum) {
     var broker = new pigato.Broker('tcp://*:5555' + workerID);
     broker.start(function() {
