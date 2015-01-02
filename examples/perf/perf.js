@@ -4,11 +4,11 @@ var async = require('async');
 var _ = require('lodash');
 
 var chunk = 'foo';
-var wnum = +(process.argv[2] || 1);
-var probes = +(process.argv[3] || 40000);
+var probes = 40000;
+var bnum = 2;
 
 if (cluster.isMaster) {
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < bnum * 2 + 1; i++) {
     cluster.fork();
   }
   cluster.on('exit', function(worker, code, signal) {
@@ -17,32 +17,28 @@ if (cluster.isMaster) {
     }
   });
 } else {
-  var workerID = cluster.worker.workerID;
-  switch (+workerID) {
-    case 1:
-    var broker = new pigato.Broker('tcp://*:55559');
+  var workerID = cluster.worker.id;
+  if (workerID <= bnum) {
+    var broker = new pigato.Broker('tcp://*:5555' + workerID);
     broker.start(function() {
-      console.log("BROKER started");
+      console.log("BROKER started " + workerID);
     });
-    break;
-    case 2:
-      console.log(wnum + " WORKERS created");
-    for (var i = 0; i < wnum; i++) {
-      (function(i) {
-        var worker = new pigato.Worker('tcp://127.0.0.1:55559', 'echo');
-        worker.on('request', function(inp, res) {
-          //res.opts.cache = 20000;
-          res.end(inp + 'FINAL');
-          //console.log("WORKER " + i);
-        });
-        worker.start();
-      })(i);
+  } else if (workerID <= bnum * 2) {
+    var b = (workerID % bnum) + 1;
+    var worker = new pigato.Worker('tcp://127.0.0.1:5555' + b, 'echo');
+    worker.on('request', function(inp, res) {
+      res.opts.cache = 20000;
+      res.end(inp + 'FINAL');
+    });
+    worker.start();
+    console.log("WORKER STARTED FOR BROKER ", b);
+  } else if (workerID === bnum * 2 + 1) {
+    console.log(probes + " CLIENT requests");
+    var bs = [];
+    for (var i = 0; i < bnum; i++) {
+      bs.push('tcp://127.0.0.1:5555' + (i + 1));
     }
-    break;
-    case 3:
-      console.log(probes + " CLIENT requests");
-
-    var client = new pigato.Client('tcp://127.0.0.1:55559');
+    var client = new pigato.Client(bs);
     client.start();
 
     var timer;
@@ -78,7 +74,6 @@ if (cluster.isMaster) {
     setTimeout(function() {
       timer = process.hrtime();
       send();
-    }, 2000);
-    break;
+    }, 1000);
   }
 }
