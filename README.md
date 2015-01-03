@@ -21,6 +21,10 @@ The goal is to offer a reliable and extensible service-oriented request-reply in
 
 [PIGATO-EXAMPLES](https://github.com/fincluster/pigato-examples) : a collection of multi-purpose useful examples.
 
+#### Performance
+
+[PIGATO-PERF](https://github.com/prdn/pigato-perf) : a command-line tool to test PIGATO performances in different scenarios.
+
 ### API
 
 #### `pigato.Broker(socket_str)`
