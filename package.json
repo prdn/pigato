@@ -5,6 +5,7 @@
   "description": "A ZeroMQ based microservices framework for NodeJS",
   "author": "prdn <paolo.ardoino@gmail.com> (http://ardoino.com/)",
   "keywords": [
+    "pigato",
     "nodejs",
     "zmq",
     "zeromq",
@@ -37,7 +38,7 @@
   "scripts": {
     "test": "make test"
   },
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/prdn/pigato.git"

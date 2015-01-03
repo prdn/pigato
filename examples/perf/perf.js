@@ -27,7 +27,7 @@ if (cluster.isMaster) {
     var b = (workerID % bnum) + 1;
     var worker = new pigato.Worker('tcp://127.0.0.1:5555' + b, 'echo');
     worker.on('request', function(inp, res) {
-      res.opts.cache = 20000;
+      res.opts.cache = 50000;
       res.end(inp + 'FINAL');
     });
     worker.start();
