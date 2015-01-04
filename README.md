@@ -1,9 +1,9 @@
-Pigato
+PIGATO
 ========
 
 [![PIGATO](http://ardoino.com/pub/pigato-200.png)](https://github.com/prdn/pigato)
 
-**A microservices framework for Node.js based on ZeroMQ**
+**PIGATO - a microservices framework for Node.js based on ZeroMQ**
 
 The goal is to offer a reliable and extensible service-oriented request-reply inspired by [Majordomo Protocol (MDP) v0.2](http://rfc.zeromq.org/spec:7) and [Titanic Service Protocol](http://rfc.zeromq.org/spec:9). 
 
