@@ -2,7 +2,7 @@
   "name": "pigato",
   "version": "0.0.14",
   "private": false,
-  "description": "A ZeroMQ based microservices framework for NodeJS",
+  "description": "A microservices framework for Node.js based on ZeroMQ",
   "author": "prdn <paolo.ardoino@gmail.com> (http://ardoino.com/)",
   "keywords": [
     "pigato",
