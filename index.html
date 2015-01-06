@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Pigato by prdn</title>
-    <meta name="google-site-verification" content="VBsdGzX1QqJezmfFjm6paLDP1tMEdDyy9ctna0vr0MA" />
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -49,23 +49,24 @@
 <h4>
 <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h4>
 
-<p>Files</p>
+<p>Start a <strong>Broker</strong></p>
 
-<ul>
-<li>Broker <code>examples/broker.js</code>
-</li>
-<li>Worker <code>examples/echo/echo_worker.js</code>
-</li>
-<li>Client <code>examples/echo/echo_client.js</code>
-</li>
-</ul>
-
-<p>Run the examples</p>
-
-<pre><code>node examples/broker 
-node examples/echo/echo_worker
-node examples/echo/echo_client
+<pre><code>node examples/broker
 </code></pre>
+
+<p>1) <strong>echo</strong> : simple echo request-reply</p>
+
+<pre><code>node examples/echo/worker
+node examples/echo/client
+</code></pre>
+
+<p>2) <strong>stocks</strong> : get stocks data from yahoo</p>
+
+<pre><code>node examples/echo/worker
+node examples/echo/client
+</code></pre>
+
+<p>More examples</p>
 
 <p><a href="https://github.com/fincluster/pigato-examples">PIGATO-EXAMPLES</a> : a collection of multi-purpose useful examples.</p>
 
@@ -81,6 +82,11 @@ node examples/echo/echo_client
 <a id="pigatobrokeraddr" class="anchor" href="#pigatobrokeraddr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Broker(addr)</code>
 </h4>
 
+<ul>
+<li>
+<code>addr</code> - Broker address (string, i.e: 'tcp://*:12345') </li>
+</ul>
+
 <p>Simply starts up a broker.</p>
 
 <pre><code>var Broker = require('./../index').Broker;
@@ -90,10 +96,17 @@ broker.start(function(){});
 </code></pre>
 
 <h4>
-<a id="pigatoworkeraddr-service_name" class="anchor" href="#pigatoworkeraddr-service_name" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Worker(addr, service_name)</code>
+<a id="pigatoworkeraddr-servicename" class="anchor" href="#pigatoworkeraddr-servicename" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Worker(addr, serviceName)</code>
 </h4>
 
-<p>Worker receives <code>"request"</code> events that contain 2 arguments:</p>
+<ul>
+<li>
+<code>addr</code> - Broker address (string, i.e: 'tcp://localhost:12345') </li>
+<li>
+<code>serviceName</code> - service implemented by the Worker (string, i.e: 'echo')</li>
+</ul>
+
+<p>Worker receives <code>"request"</code> events with 2 arguments:</p>
 
 <ul>
 <li>
@@ -119,7 +132,9 @@ broker.start(function(){});
 <code>ended</code> - tells (boolean) if the request has been ended.</li>
 </ul>
 
-<pre><code>var worker = new pigato.Worker('tcp://localhost:12345', 'MyService');
+<p>Example:</p>
+
+<pre><code>var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
 
 worker.on('request', function(data, reply) {
   fs.createReadStream(data).pipe(reply);
@@ -136,6 +151,8 @@ worker.on('request', function(data, reply) {
 
 <p>Worker may also specify whether the reply should be cached and the cache timeout in milliseconds </p>
 
+<p>Example:</p>
+
 <pre><code>worker.on('request', function(data, reply) {
   reply.opts.cache = 1000; // cache reply for 1 second
   reply.end('FINAL DATA');
@@ -145,7 +162,7 @@ worker.on('request', function(data, reply) {
 <p>Take note: due to the framing protocol of <code>zmq</code> only the data supplied to <code>response.end(data)</code> will be given to the client's final callback.</p>
 
 <h4>
-<a id="pigatoclientaddrs" class="anchor" href="#pigatoclientaddrs" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Client(addrs)</code>
+<a id="pigatoclientaddrs" class="anchor" href="#pigatoclientaddrs" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.Client(addrs)</code>
 </h4>
 
 <ul>
@@ -164,7 +181,9 @@ worker.on('request', function(data, reply) {
 <code>opts</code> - options object for the request</li>
 </ul>
 
-<pre><code>var client = new pigato.Worker('tcp://localhost:12345');
+<p>Example:</p>
+
+<pre><code>var client = new PIGATO.Client('tcp://localhost:12345');
 
 client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 
@@ -189,6 +208,8 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 <code>finalCallback(err, data)</code> - called when the request will emit no more data</li>
 <li><code>opts</code></li>
 </ul>
+
+<p>Example:</p>
 
 <pre><code>client.request('my-service', 'foo', function (err, data) {
   // frames sent prior to final frame
