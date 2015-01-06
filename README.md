@@ -14,18 +14,18 @@ The goal is to offer a reliable and extensible service-oriented request-reply in
 
 #### Examples
 
-Run the **Broker**
+Start a **Broker**
 ```
 node examples/broker
 ```
 
-1) **echo** example: simple echo request-reply
+1) **echo** : simple echo request-reply
 ```
 node examples/echo/worker
 node examples/echo/client
 ```
 
-2) **stocks** example: get stocks data from yahoo
+2) **stocks** : get stocks data from yahoo
 ```
 node examples/echo/worker
 node examples/echo/client
@@ -43,6 +43,7 @@ More examples
 ### API
 
 #### `pigato.Broker(addr)`
+* `addr` - Broker address (string, i.e: 'tcp://*:12345') 
 
 Simply starts up a broker.
 
@@ -53,9 +54,11 @@ var broker = new Broker("tcp://*:55555");
 broker.start(function(){});
 ```
 
-#### `pigato.Worker(addr, service_name)`
+#### `pigato.Worker(addr, serviceName)`
+* `addr` - Broker address (string, i.e: 'tcp://localhost:12345') 
+* `serviceName` - service implemented by the Worker (string, i.e: 'echo')
 
-Worker receives `"request"` events that contain 2 arguments:
+Worker receives `"request"` events with 2 arguments:
 
 * `data` - value sent by a client for this request.
 * `reply` - extended writable stream to send data to the client.
@@ -69,9 +72,9 @@ Worker receives `"request"` events that contain 2 arguments:
 * `active()` - returns (boolean) the status of the request. A request becomes inactive when the worker disconnects from the broker or it is discarded by the client or the client disconnects from the broker. This is useful for long running tasks and Worker can monitor whether or not continue processing a request.
 * `ended` - tells (boolean) if the request has been ended.
 
-
+Example:
 ```
-var worker = new pigato.Worker('tcp://localhost:12345', 'MyService');
+var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
 
 worker.on('request', function(data, reply) {
   fs.createReadStream(data).pipe(reply);
@@ -87,6 +90,8 @@ worker.on('request', function(data, reply) {
 ```
 
 Worker may also specify whether the reply should be cached and the cache timeout in milliseconds 
+
+Example:
 ```
 worker.on('request', function(data, reply) {
   reply.opts.cache = 1000; // cache reply for 1 second
@@ -96,7 +101,7 @@ worker.on('request', function(data, reply) {
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
 
-#### `pigato.Client(addrs)`
+#### `PIGATO.Client(addrs)`
 * `addrs` - list of Broker addresses (array)
 
 Clients may make requests using `Client.request(...)` method.
@@ -105,8 +110,9 @@ Clients may make requests using `Client.request(...)` method.
 * `data` - data to give to the service (string/object/buffer)
 * `opts` - options object for the request
 
+Example:
 ```
-var client = new pigato.Worker('tcp://localhost:12345');
+var client = new PIGATO.Client('tcp://localhost:12345');
 
 client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 
@@ -128,6 +134,7 @@ Clients may also make request with partial and final callbacks instead of using 
 * `finalCallback(err, data)` - called when the request will emit no more data
 * `opts`
 
+Example:
 ```
 client.request('my-service', 'foo', function (err, data) {
   // frames sent prior to final frame
