@@ -1,6 +1,9 @@
+var fs = require('fs');
 var Client = require('./../../index').Client;
 
-var client = new Client('tcp://localhost:55555');
+var conf = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'UTF-8'));
+
+var client = new Client('tcp://' + conf.broker.host + ':' + conf.broker.port);
 client.start();
 
 client.on('error', function(e) {

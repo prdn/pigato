@@ -1,0 +1,6 @@
+{
+  "broker": {
+    "host": "localhost",
+    "port": 55555
+  }
+}

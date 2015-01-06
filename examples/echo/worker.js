@@ -1,6 +1,9 @@
+var fs = require('fs');
 var Worker = require('./../../index').Worker;
 
-var worker = new Worker('tcp://localhost:55555', 'echo');
+var conf = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'UTF-8'));
+
+var worker = new Worker('tcp://' + conf.broker.host + ':' + conf.broker.port, 'echo')
 worker.start();
 
 worker.on('error', function(e) {
