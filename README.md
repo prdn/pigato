@@ -13,27 +13,26 @@ The goal is to offer a reliable and extensible service-oriented request-reply in
 * Broker : handles requests queueing and routing
 
 #### Examples
-Files
-* Broker `examples/broker.js`
-* Worker `examples/echo/worker.js`
-* Client `examples/echo/client.js`
 
-**Run the Broker**
+Run the **Broker**
 ```
 node examples/broker
 ```
 
-**echo** example: simple echo request-reply
+1) **echo** example: simple echo request-reply
 ```
 node examples/echo/worker
 node examples/echo/client
 ```
 
-**stocks** example: get stocks data from yahoo
+2) **stocks** example: get stocks data from yahoo
 ```
 node examples/echo/worker
 node examples/echo/client
 ```
+
+
+More examples
 
 [PIGATO-EXAMPLES](https://github.com/fincluster/pigato-examples) : a collection of multi-purpose useful examples.
 
