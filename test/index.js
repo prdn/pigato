@@ -158,6 +158,55 @@ describe('BASE', function() {
     }
   });
 
+  it('Client request persist', function(done) {
+    var ns = uuid.generate();
+    this.timeout(25 * 1000);
+
+    var chunk = 'foo';
+
+    var workers = [];
+
+    function spawn(id) {
+      var worker = new PIGATO.Worker(location, ns);
+      worker.on('request', function(inp, res) {
+        setTimeout(function() {
+          res.end(chunk + '/' + id);
+        }, 2000);
+      });
+
+      worker.start();
+      workers.push(worker);
+
+      return worker;
+    };
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    client.request(
+      ns, chunk, { persist: 1 }
+    ).on('data', function(data) {
+      chai.assert.equal(data, chunk + '/w2');
+    }).on('end', function() {
+      stop();
+    });
+    
+    spawn('w1');
+
+    setTimeout(function() {
+      spawn('w2');
+      workers[0].stop();
+    }, 1000);
+
+    function stop() {
+      workers.forEach(function(worker) {
+        worker.stop();
+      });
+      client.stop();
+      done();
+    }
+  });
+
   it('Client error request (stream)', function(done) {
     var ns = uuid.generate();
     var chunk = 'SOMETHING_FAILED';

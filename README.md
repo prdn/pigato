@@ -147,7 +147,8 @@ client.request('my-service', 'foo', function (err, data) {
 ```
 
 ##### Request options
-* `timeout` : default 60000 (60 seconds). Set -1 to disable (time unlimited request)
+* `timeout` : timeout in milliseconds; number [default 60000] (-1 to disable = time unlimited request)
+* `persist` : persistent request. number 0|1 [default 0]
 
 #### Notes
 * when using a `inproc` socket the broker *must* become active before any queued messages.
