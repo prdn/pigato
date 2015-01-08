@@ -31,10 +31,10 @@ describe('BASE', function() {
     client.request(
       ns, chunk
     ).on('data', function(data) {
-      chai.assert.equal(data, String(chunk + (repIx++)));
-    }).on('end', function() {
-      stop();
-    });
+        chai.assert.equal(data, String(chunk + (repIx++)));
+      }).on('end', function() {
+        stop();
+      });
 
     function stop() {
       worker.stop();
@@ -67,7 +67,7 @@ describe('BASE', function() {
       ns, chunk,
       function(err, data) {
         chai.assert.equal(data, chunk + (repIx++));
-      }, 
+      },
       function(err, data) {
         chai.assert.equal(data, chunk + 'FINAL' + (++repIx));
         stop();
@@ -144,14 +144,14 @@ describe('BASE', function() {
     client.request(
       ns, chunk
     ).on('data', function(data) {
-      chai.assert.equal(data, chunk_2);
-    }).on('end', function() {
-      stop();
-    });
+        chai.assert.equal(data, chunk_2);
+      }).on('end', function() {
+        stop();
+      });
 
     function stop() {
-      workers.forEach(function(worker) { 
-        worker.stop(); 
+      workers.forEach(function(worker) {
+        worker.stop();
       });
       client.stop();
       done();
@@ -176,9 +176,9 @@ describe('BASE', function() {
     client.request(
       ns, chunk
     ).on('error', function(err) {
-      chai.assert.equal(err, chunk);
-      stop();
-    });
+        chai.assert.equal(err, chunk);
+        stop();
+      });
 
     function stop() {
       worker.stop();
@@ -230,9 +230,9 @@ describe('BASE', function() {
       ns, 'foo',
       { timeout: 1000 }
     ).on('error', function(err) {
-      chai.assert.equal(err, 'C_TIMEOUT');
-      stop();	
-    });
+        chai.assert.equal(err, 'C_TIMEOUT');
+        stop();
+      });
 
     function stop() {
       client.stop();
@@ -252,7 +252,7 @@ describe('BASE', function() {
       undefined,
       function(err, data) {
         chai.assert.equal(err, 'C_TIMEOUT');
-        stop();	
+        stop();
       },
       { timeout: 1000 }
     );
@@ -262,4 +262,66 @@ describe('BASE', function() {
       done();
     }
   });
+});
+
+describe('Resend after timout', function () {
+  var broker = new PIGATO.Broker(location);
+  broker.start(function() {});
+
+  it('Supports resending after worker dies', function (done) {
+    var ns = uuid.generate();
+    this.timeout(15000);
+    var client = new PIGATO.Client(location);
+    var worker = new PIGATO.Worker(location, ns);
+    var backupWorker = new PIGATO.Worker(location, ns);
+    var chunk = 'foo';
+    client.start();
+    worker.start();
+
+    worker.on('request', function(inp, res) {
+      res.end(inp + ':bar');
+    });
+
+    backupWorker.on('request', function(inp, res) {
+      res.end(inp + ':bar');
+    });
+
+    var counter = 0;
+    function request() {
+      client.request(ns, chunk, {timeout: 5000})
+        .on('data', function (data) {
+          chai.assert.equal(data, chunk + ':bar');
+        })
+        .on('end', function () {
+          if(counter >= 3) {
+            stop(null);
+          } else {
+            setTimeout(function () {
+              worker.stop(null);
+              request();
+            }, 2000)
+          }
+          counter++;
+        })
+        .on('error', function (err) {
+          if (err === 'C_TIMEOUT' && counter < 3) {
+            request();
+          } else {
+            stop('All workers died');
+          }
+        });
+    }
+
+    request();
+    setTimeout(function () {
+      backupWorker.start();
+    }, 10000);
+
+    function stop(err) {
+      client.stop();
+      worker.stop();
+      done(err);
+    }
+
+  })
 });
