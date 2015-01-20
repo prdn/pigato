@@ -114,6 +114,85 @@ describe('BASE', function() {
     }
   });
 
+  it('Client partial/final request (callback) with wildcard', function(done) {
+    var ns = uuid.generate();
+    var chunk = "foo"
+
+    var worker = new PIGATO.Worker(location, ns + '/*');
+
+    worker.on('request', function(inp, res) {
+      res.end(chunk);
+    });
+
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    var repIx = 0;
+
+    client.request(
+      ns + '/toto', 'foo',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, chunk);
+        stop();
+      }
+    );
+
+    function stop() {
+      worker.stop();
+      client.stop();
+      done();
+    }
+  });
+
+
+  it('Client partial/final request (callback); Classical worker has priority over wildcard', function(done) {
+    var ns = uuid.generate();
+    var chunk = "foo";
+    var chunkW = "wildcard";
+
+    var workerW = new PIGATO.Worker(location, ns + '/*');
+
+    workerW.on('request', function(inp, res) {
+      res.end(chunkW);
+    });
+
+
+    var worker = new PIGATO.Worker(location, ns + '/toto');
+
+    worker.on('request', function(inp, res) {
+      res.end(chunk);
+    });
+
+
+    workerW.start();
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    var repIx = 0;
+
+    client.request(
+      ns + '/toto', 'foo',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, chunk);
+        stop();
+      }
+    );
+
+    function stop() {
+      workerW.stop();
+      worker.stop();
+      client.stop();
+      done();
+    }
+  });
+
+
   it('Worker reject', function(done) {
     var ns = uuid.generate();
     this.timeout(10 * 1000);
