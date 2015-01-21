@@ -168,6 +168,54 @@ describe('BASE', function() {
 
 
     workerW.start();
+    setTimeout(function() {
+      worker.start();
+
+      var client = new PIGATO.Client(location);
+      client.start();
+
+      var repIx = 0;
+
+      client.request(
+        ns + '/toto', 'foo',
+        undefined,
+        function(err, data) {
+          chai.assert.deepEqual(data, chunk);
+          stop();
+        }
+      );
+
+      function stop() {
+        workerW.stop();
+        worker.stop();
+        client.stop();
+        done();
+      }
+
+    }, 500)
+
+  });
+
+  it('Client partial/final request (callback); will request will match wildcard', function(done) {
+    var ns = uuid.generate();
+    var chunk = "foo";
+    var chunkW = "wildcard";
+
+    var workerW = new PIGATO.Worker(location, ns + '/*');
+
+    workerW.on('request', function(inp, res) {
+      res.end(chunkW);
+    });
+
+
+    var worker = new PIGATO.Worker(location, ns + '/toto');
+
+    worker.on('request', function(inp, res) {
+      res.end(chunk);
+    });
+
+
+    workerW.start();
     worker.start();
 
     var client = new PIGATO.Client(location);
