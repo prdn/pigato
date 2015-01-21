@@ -196,7 +196,7 @@ describe('BASE', function() {
 
   });
 
-  it('Client partial/final request (callback); will request will match wildcard', function(done) {
+  it('Client partial/final request (callback); wild request will match wildcard', function(done) {
     var ns = uuid.generate();
     var chunk = "foo";
     var chunkW = "wildcard";
@@ -240,6 +240,58 @@ describe('BASE', function() {
     }
   });
 
+it('Client partial/final request (callback); wildcard mechanism choose the best match', function(done) {
+    var ns = uuid.generate();
+    var chunk = "norf";
+    var chunkW1 = "Generic wildcard";
+    var chunkW2 = "less Generic wildcard";
+
+    var workerW1 = new PIGATO.Worker(location, ns + '/*');
+
+    workerW1.on('request', function(inp, res) {
+      res.end(chunkW1);
+    });
+
+    var workerW2 = new PIGATO.Worker(location, ns + '/foo*/');
+
+    workerW2.on('request', function(inp, res) {
+      res.end(chunk);
+    });
+
+
+
+    var worker= new PIGATO.Worker(location, ns + '/foo/bar/*');
+
+    worker.on('request', function(inp, res) {
+      res.end(chunk);
+    });
+
+    workerW2.start();
+    workerW1.start();
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    var repIx = 0;
+
+    client.request(
+      ns + '/foo/bar/qux', 'foo',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, chunk);
+        stop();
+      }
+    );
+
+    function stop() {
+      workerW1.stop();
+      workerW2.stop();
+      worker.stop();
+      client.stop();
+      done();
+    }
+  });
 
   it('Worker reject', function(done) {
     var ns = uuid.generate();
