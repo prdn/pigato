@@ -224,10 +224,10 @@ describe('BASE', function() {
     var repIx = 0;
 
     client.request(
-      ns + '/toto', 'foo',
+      ns + '/bar', 'foo',
       undefined,
       function(err, data) {
-        chai.assert.deepEqual(data, chunk);
+        chai.assert.deepEqual(data, chunkW);
         stop();
       }
     );
@@ -317,7 +317,7 @@ describe('BASE', function() {
     }).on('end', function() {
       stop();
     });
-    
+
     spawn('w1');
 
     setTimeout(function() {
