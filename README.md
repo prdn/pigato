@@ -188,6 +188,7 @@ client.request('my-service', 'foo', function (err, data) {
 
 #### Contributors
 * [bmeck](https://github.com/bmeck)
+* [maxired](https://github.com/maxired)
 
 #### Credits
 Based on https://github.com/nuh-temp/zmq-mdp2 project
