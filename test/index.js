@@ -158,7 +158,7 @@ describe('BASE', function() {
     }
   });
 
-  it('Client request persist', function(done) {
+  it('Client request retry', function(done) {
     var ns = uuid.generate();
     this.timeout(25 * 1000);
 
@@ -184,7 +184,7 @@ describe('BASE', function() {
     client.start();
 
     client.request(
-      ns, chunk, { persist: 1 }
+      ns, chunk, { retry: 1 }
     ).on('data', function(data) {
       chai.assert.equal(data, chunk + '/w2');
     }).on('end', function() {
