@@ -293,6 +293,122 @@ it('Client partial/final request (callback); wildcard mechanism choose the best 
     }
   });
 
+
+  it('Client can 2 two request in //', function(done) {
+    var ns = uuid.generate();
+    var chunk = "bar";
+
+    var worker = new PIGATO.Worker(location, ns + '/foo');
+
+
+    var reqIx = 0;
+    var repIx = 0;
+    worker.on('request', function(inp, res) {
+      reqIx++;
+      if (reqIx == 2) {
+        return res.end(inp);
+      }
+
+      var it = setInterval(function() {
+        if (reqIx == 2) {
+          clearInterval(it);
+          res.end(inp);
+        }
+      }, 50);
+    });
+
+
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    client.request(
+      ns + '/foo', 'toto',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, 'toto');
+        repIx++;
+        if (repIx == 2) {
+          stop();
+        }
+      }
+    );
+
+    client.request(
+      ns + '/foo', 'tata',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, 'tata');
+        repIx++;
+        if (repIx == 2) {
+          stop();
+        }
+      }
+    );
+
+    function stop() {
+      worker.stop();
+      client.stop();
+      done();
+    }
+
+
+  });
+
+
+  it('Client can 2 two request in // with wildcard', function(done) {
+    var ns = uuid.generate();
+    var chunk = "bar";
+
+    var worker = new PIGATO.Worker(location, ns + '/foo/*');
+
+    worker.on('request', function(inp, res) {
+      res.end(inp);
+    });
+
+
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    var repIx = 0;
+
+    client.request(
+      ns + '/foo/toto', 'toto',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, 'toto');
+        repIx++;
+        if (repIx == 2) {
+          stop();
+        }
+      }
+    );
+
+    client.request(
+      ns + '/foo/tata', 'tata',
+      undefined,
+      function(err, data) {
+        chai.assert.deepEqual(data, 'tata');
+        repIx++;
+        if (repIx == 2) {
+          stop();
+        }
+      }
+    );
+
+    function stop() {
+      worker.stop();
+      client.stop();
+      done();
+    }
+
+
+  });
+
+
   it('Worker reject', function(done) {
     var ns = uuid.generate();
     this.timeout(10 * 1000);
