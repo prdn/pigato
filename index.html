@@ -96,7 +96,7 @@ broker.start(function(){});
 </code></pre>
 
 <h4>
-<a id="pigatoworkeraddr-servicename" class="anchor" href="#pigatoworkeraddr-servicename" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Worker(addr, serviceName)</code>
+<a id="pigatoworkeraddr-servicename-conf" class="anchor" href="#pigatoworkeraddr-servicename-conf" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Worker(addr, serviceName, conf)</code>
 </h4>
 
 <ul>
@@ -104,6 +104,14 @@ broker.start(function(){});
 <code>addr</code> - Broker address (string, i.e: 'tcp://localhost:12345') </li>
 <li>
 <code>serviceName</code> - service implemented by the Worker (string, i.e: 'echo')</li>
+<li>
+<code>conf</code> - configuration override (object: { concurrency: 20 })
+
+<ul>
+<li>
+<code>concurrency</code> - sets max number of concurrent requests (-1 = no limit)</li>
+</ul>
+</li>
 </ul>
 
 <p>Worker receives <code>"request"</code> events with 2 arguments:</p>
@@ -157,6 +165,13 @@ worker.on('request', function(data, reply) {
   reply.opts.cache = 1000; // cache reply for 1 second
   reply.end('FINAL DATA');
 });
+</code></pre>
+
+<p>Worker can change concurrency level updating its configuration. This information is carried with the heartbeat message.</p>
+
+<p>Example:</p>
+
+<pre><code>worker.conf.concurrency = 2;
 </code></pre>
 
 <p>Take note: due to the framing protocol of <code>zmq</code> only the data supplied to <code>response.end(data)</code> will be given to the client's final callback.</p>
@@ -226,7 +241,10 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 
 <ul>
 <li>
-<code>timeout</code> : default 60000 (60 seconds). Set -1 to disable (time unlimited request)</li>
+<code>timeout</code> : timeout in milliseconds; number <a href="-1%20to%20disable%20=%20time%20unlimited%20request">default 60000</a>
+</li>
+<li>
+<code>retry</code> : if a Worker dies before replying, the Request is automatically requeued. number 0|1 [default 0]</li>
 </ul>
 
 <h4>
@@ -254,9 +272,9 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h4>
 
 <ul>
-<li>Compatibility with MDP protocol v0.2 .</li>
 <li>Support for partial replies.</li>
 <li>Client multi-request support.</li>
+<li>Worker concurrent requests.</li>
 <li>Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).</li>
 </ul>
 
@@ -296,12 +314,8 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 
 <ul>
 <li><a href="https://github.com/bmeck">bmeck</a></li>
+<li><a href="https://github.com/maxired">maxired</a></li>
 </ul>
-
-<h4>
-<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h4>
-
-<p>Based on <a href="https://github.com/nuh-temp/zmq-mdp2">https://github.com/nuh-temp/zmq-mdp2</a> project</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/prdn">prdn</a></p>
