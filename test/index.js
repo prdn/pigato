@@ -116,7 +116,7 @@ describe('BASE', function() {
 
   it('Worker reject', function(done) {
     var ns = uuid.v4();
-    this.timeout(10 * 1000);
+    this.timeout(15 * 1000);
 
     var chunk = 'NOT_MY_JOB';
     var chunk_2 = 'DID_MY_JOB';
@@ -375,4 +375,115 @@ describe('Resend after timout', function () {
     }
 
   })
+});
+
+describe('Concurrency', function () {
+  var broker = new PIGATO.Broker(location);
+  broker.start(function() {});
+
+ it('5 concurrent requests', function(done) {
+    var ns = uuid.v4();
+    var chunk = 'bar';
+    
+    this.timeout(15000);
+
+    var worker = new PIGATO.Worker(location, ns);
+
+    var reqIx = 0;
+
+    worker.on('request', function(inp, res) {
+      ++reqIx;
+
+      var it = setInterval(function() {
+        if (reqIx < 5) {
+          return;
+        }
+
+        clearInterval(it);
+
+        res.end(chunk);
+      }, 50);
+    });
+
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    var repIx = 0;
+
+    for (var i = 0; i < 5; i++) {
+      client.request(
+        ns, chunk,
+        undefined,
+        function(err, data) {
+          chai.assert.deepEqual(data, chunk);
+          ++repIx;
+          if (repIx === 5) {
+            stop();
+          }
+        }
+      );
+    }
+
+    function stop() {
+      worker.stop();
+      client.stop();
+      done();
+    }
+  });
+
+ it('Configure concurrency', function(done) {
+    var ns = uuid.v4();
+    var chunk = 'bar';
+    
+    this.timeout(15000);
+
+    var worker = new PIGATO.Worker(location, ns);
+
+    var reqIx = 0;
+
+    worker.on('request', function(inp, res) {
+      ++reqIx;
+
+      var it = setInterval(function() {
+        if (reqIx < 100) {
+          return;
+        }
+
+        clearInterval(it);
+
+        res.end(chunk);
+      }, 50);
+    });
+
+    worker.start();
+
+    var client = new PIGATO.Client(location);
+    client.start();
+
+    var repIx = 0;
+
+    setTimeout(function() {
+      for (var i = 0; i < 100; i++) {
+        client.request(
+          ns, chunk,
+          undefined,
+          function(err, data) {
+            chai.assert.deepEqual(data, chunk);
+            ++repIx;
+            if (repIx === 100) {
+              stop();
+            }
+          }
+        );
+      }
+    }, 1000);
+
+    function stop() {
+      worker.stop();
+      client.stop();
+      done();
+    }
+  });
 });
