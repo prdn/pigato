@@ -439,7 +439,7 @@ describe('Concurrency', function () {
     
     this.timeout(15000);
 
-    var worker = new PIGATO.Worker(location, ns);
+    var worker = new PIGATO.Worker(location, ns, { concurrency: 100 });
 
     var reqIx = 0;
 
