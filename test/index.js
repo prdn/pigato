@@ -1,6 +1,6 @@
 var PIGATO = require('../');
 var chai = require('chai');
-var uuid = require('shortid');
+var uuid = require('node-uuid');
 
 var location = 'inproc://#1';
 
@@ -9,7 +9,7 @@ describe('BASE', function() {
   broker.start(function() {});
 
   it('Client partial/final request (stream)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = 'foo';
 
     var worker = new PIGATO.Worker(location, ns);
@@ -44,7 +44,7 @@ describe('BASE', function() {
   });
 
   it('Client partial/final request (callback)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = 'foo';
 
     var worker = new PIGATO.Worker(location, ns);
@@ -82,7 +82,7 @@ describe('BASE', function() {
   });
 
   it('JSON Client partial/final request (callback)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = { foo: 'bar' };
 
     var worker = new PIGATO.Worker(location, ns);
@@ -115,7 +115,7 @@ describe('BASE', function() {
   });
 
   it('Worker reject', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     this.timeout(10 * 1000);
 
     var chunk = 'NOT_MY_JOB';
@@ -159,7 +159,7 @@ describe('BASE', function() {
   });
 
   it('Client request retry', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     this.timeout(25 * 1000);
 
     var chunk = 'foo';
@@ -208,7 +208,7 @@ describe('BASE', function() {
   });
 
   it('Client error request (stream)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = 'SOMETHING_FAILED';
 
     var worker = new PIGATO.Worker(location, ns);
@@ -237,7 +237,7 @@ describe('BASE', function() {
   });
 
   it('Client error request (callback)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = 'SOMETHING_FAILED';
 
     var worker = new PIGATO.Worker(location, ns);
@@ -269,7 +269,7 @@ describe('BASE', function() {
   });
 
   it('Client error timeout (stream)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     this.timeout(5000);
 
     var client = new PIGATO.Client(location);
@@ -290,7 +290,7 @@ describe('BASE', function() {
   });
 
   it('Client error timeout (callback)', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     this.timeout(5000);
 
     var client = new PIGATO.Client(location);
@@ -318,7 +318,7 @@ describe('Resend after timout', function () {
   broker.start(function() {});
 
   it('Supports resending after worker dies', function (done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     this.timeout(15000);
 
     var client = new PIGATO.Client(location);
