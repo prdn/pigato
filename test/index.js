@@ -320,10 +320,12 @@ describe('Resend after timout', function () {
   it('Supports resending after worker dies', function (done) {
     var ns = uuid.generate();
     this.timeout(15000);
+
     var client = new PIGATO.Client(location);
     var worker = new PIGATO.Worker(location, ns);
     var backupWorker = new PIGATO.Worker(location, ns);
     var chunk = 'foo';
+    
     client.start();
     worker.start();
 
