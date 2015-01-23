@@ -172,9 +172,9 @@ client.request('my-service', 'foo', function (err, data) {
 * Multi-Broker : infinite brokers to avoid bottlenecks and improve network reliability
 
 #### Features
-* Compatibility with MDP protocol v0.2 .
 * Support for partial replies.
 * Client multi-request support.
+* Worker concurrent requests.
 * Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
 
 #### Specification (good for RFC)
@@ -198,6 +198,3 @@ client.request('my-service', 'foo', function (err, data) {
 #### Contributors
 * [bmeck](https://github.com/bmeck)
 * [maxired](https://github.com/maxired)
-
-#### Credits
-Based on https://github.com/nuh-temp/zmq-mdp2 project
