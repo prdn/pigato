@@ -54,9 +54,11 @@ var broker = new Broker("tcp://*:55555");
 broker.start(function(){});
 ```
 
-#### `pigato.Worker(addr, serviceName)`
+#### `pigato.Worker(addr, serviceName, conf)`
 * `addr` - Broker address (string, i.e: 'tcp://localhost:12345') 
 * `serviceName` - service implemented by the Worker (string, i.e: 'echo')
+* `conf` - configuration override (object: { concurrency: 20 })
+  * `concurrency` - sets max number of concurrent requests (-1 = no limit)
 
 Worker receives `"request"` events with 2 arguments:
 
@@ -97,6 +99,13 @@ worker.on('request', function(data, reply) {
   reply.opts.cache = 1000; // cache reply for 1 second
   reply.end('FINAL DATA');
 });
+```
+
+Worker can change concurrency level updating its configuration. This information is carried with the heartbeat message.
+
+Example:
+```
+worker.conf.concurrency = 2;
 ```
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
@@ -163,9 +172,9 @@ client.request('my-service', 'foo', function (err, data) {
 * Multi-Broker : infinite brokers to avoid bottlenecks and improve network reliability
 
 #### Features
-* Compatibility with MDP protocol v0.2 .
 * Support for partial replies.
 * Client multi-request support.
+* Worker concurrent requests.
 * Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
 
 #### Specification (good for RFC)
@@ -189,6 +198,3 @@ client.request('my-service', 'foo', function (err, data) {
 #### Contributors
 * [bmeck](https://github.com/bmeck)
 * [maxired](https://github.com/maxired)
-
-#### Credits
-Based on https://github.com/nuh-temp/zmq-mdp2 project
