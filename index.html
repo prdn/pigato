@@ -33,21 +33,62 @@
 
 <p><a href="https://github.com/prdn/pigato"><img src="http://ardoino.com/pub/pigato-200.png" alt="PIGATO"></a></p>
 
-<p><strong>PIGATO - a microservices framework for Node.js based on ZeroMQ</strong></p>
+<p><strong>PIGATO - an high-performance microservices framework for Node.js based on ZeroMQ</strong></p>
 
-<p>The goal is to offer a reliable and extensible service-oriented request-reply inspired by <a href="http://rfc.zeromq.org/spec:7">Majordomo Protocol (MDP) v0.2</a> and <a href="http://rfc.zeromq.org/spec:9">Titanic Service Protocol</a>. </p>
+<p>PIGATO aims to offer a high-performance, reliable, scalable and extensible service-oriented framework for Node.js.</p>
+
+<h3>
+<a id="structure-and-protocol" class="anchor" href="#structure-and-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure and Protocol</h3>
 
 <h4>
 <a id="structure" class="anchor" href="#structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure</h4>
 
 <ul>
-<li>Worker : receives requests, does something and replies. A worker offers a service, should be a functionality as atomic as possible</li>
-<li>Client : creates, pushes requests and waits for results (if needed). A request always includes a service and a payload/data for the Worker</li>
-<li>Broker : handles requests queueing and routing</li>
+<li>Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible</li>
+<li>Client : creates, pushes Requests and waits for results. A request always includes a service name and data for the Worker</li>
+<li>Broker : handles Requests queueing and routing</li>
 </ul>
 
 <h4>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h4>
+<a id="benefits" class="anchor" href="#benefits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benefits</h4>
+
+<ul>
+<li>High-performance</li>
+<li>Realiable</li>
+<li>Distributed and highly Scalable</li>
+<li>Multi-Worker : infinite Services and infinite Workers for each service</li>
+<li>Multi-Client : infinite Clients</li>
+<li>Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability</li>
+</ul>
+
+<h4>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h4>
+
+<ul>
+<li>Request / Reply protocol</li>
+<li>Support for partial Replies</li>
+<li>Streaming Requests</li>
+<li>Client multi-Request support</li>
+<li>Worker concurrent Requests</li>
+<li>Worker dynamic load balancing</li>
+<li>Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).</li>
+</ul>
+
+<h4>
+<a id="specification-good-for-rfc" class="anchor" href="#specification-good-for-rfc" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specification (good for RFC)</h4>
+
+<ul>
+<li>Worker &lt;-&gt; Broker heartbeating.</li>
+<li>Broker tracks Worker/Client/Request relation.</li>
+<li>Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. </li>
+<li>Worker MAY decide to stop an inactive Request (tracks liveness for Request).</li>
+<li><p>Client MAY assign a timeout to a Request.</p></li>
+<li><p>Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.</p></li>
+<li>Broker SHALL force disconnect Broker if any error occurs.</li>
+</ul>
+
+<h3>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
 
 <p>Start a <strong>Broker</strong></p>
 
@@ -255,62 +296,24 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 </ul>
 
 <h3>
-<a id="protocol" class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Protocol</h3>
-
-<h4>
-<a id="benefits" class="anchor" href="#benefits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benefits</h4>
-
-<ul>
-<li>Reliable request / reply protocol</li>
-<li>Scalability</li>
-<li>Multi-Worker : infinite services and infinite workers for each service</li>
-<li>Multi-Client : infinite clients</li>
-<li>Multi-Broker : infinite brokers to avoid bottlenecks and improve network reliability</li>
-</ul>
-
-<h4>
-<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h4>
-
-<ul>
-<li>Support for partial replies.</li>
-<li>Client multi-request support.</li>
-<li>Worker concurrent requests.</li>
-<li>Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).</li>
-</ul>
-
-<h4>
-<a id="specification-good-for-rfc" class="anchor" href="#specification-good-for-rfc" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specification (good for RFC)</h4>
-
-<ul>
-<li>Worker &lt;-&gt; Broker heartbeating.</li>
-<li>Broker MAY track Worker/Client/Request relation.</li>
-<li>Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. </li>
-<li>Worker MAY decide to stop an inactive Request (tracks liveness for Request).</li>
-<li>Client MAY assign a timeout to a Request.</li>
-<li>Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.</li>
-<li>Broker SHALL force disconnect Broker if any error occurs.</li>
-</ul>
-
-<h4>
-<a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h4>
+<a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h3>
 
 <ul>
 <li>Add authentication support through <a href="https://github.com/msealand/zmq-zap.node">zmq-zap</a> ZeroMQ ZAP to trust Clients and Workers.</li>
-<li>Support <a href="http://rfc.zeromq.org/spec:9">Titanic Service Protocol</a> for peristent requests.</li>
 </ul>
 
-<h4>
-<a id="follow-me" class="anchor" href="#follow-me" aria-hidden="true"><span class="octicon octicon-link"></span></a>Follow me</h4>
+<h3>
+<a id="follow-me" class="anchor" href="#follow-me" aria-hidden="true"><span class="octicon octicon-link"></span></a>Follow me</h3>
 
 <ul>
-<li>Fincluster - cloud financial platform : <a href="http://fincluster.com">fincluster</a> /  <a href="https://twitter.com/fincluster">@fincluster</a>
+<li>Fincluster - cloud financial investments platform : <a href="https://fincluster.com">fincluster</a> /  <a href="https://twitter.com/fincluster">@fincluster</a>
 </li>
 <li>My personal blog : <a href="http://ardoino.com">ardoino.com</a> / <a href="https://twitter.com/paoloardoino">@paoloardoino</a>
 </li>
 </ul>
 
-<h4>
-<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h4>
+<h3>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h3>
 
 <ul>
 <li><a href="https://github.com/bmeck">bmeck</a></li>
