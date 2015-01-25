@@ -3,16 +3,45 @@ PIGATO
 
 [![PIGATO](http://ardoino.com/pub/pigato-200.png)](https://github.com/prdn/pigato)
 
-**PIGATO - a microservices framework for Node.js based on ZeroMQ**
+**PIGATO - an high-performance microservices framework for Node.js based on ZeroMQ**
 
-The goal is to offer a reliable and extensible service-oriented request-reply inspired by [Majordomo Protocol (MDP) v0.2](http://rfc.zeromq.org/spec:7) and [Titanic Service Protocol](http://rfc.zeromq.org/spec:9). 
+PIGATO aims to offer a high-performance, reliable, scalable and extensible service-oriented framework for Node.js.
+
+### Structure and Protocol
 
 #### Structure
-* Worker : receives requests, does something and replies. A worker offers a service, should be a functionality as atomic as possible
-* Client : creates, pushes requests and waits for results (if needed). A request always includes a service and a payload/data for the Worker
-* Broker : handles requests queueing and routing
+* Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible
+* Client : creates, pushes Requests and waits for results. A request always includes a service name and data for the Worker
+* Broker : handles Requests queueing and routing
 
-#### Examples
+#### Benefits
+* High-performance
+* Realiable
+* Distributed and highly Scalable
+* Multi-Worker : infinite Services and infinite Workers for each service
+* Multi-Client : infinite Clients
+* Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability
+
+#### Features
+* Request / Reply protocol
+* Support for partial Replies
+* Streaming Requests
+* Client multi-Request support
+* Worker concurrent Requests
+* Worker dynamic load balancing
+* Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
+
+#### Specification (good for RFC)
+* Worker <-> Broker heartbeating.
+* Broker tracks Worker/Client/Request relation.
+* Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. 
+* Worker MAY decide to stop an inactive Request (tracks liveness for Request).
+* Client MAY assign a timeout to a Request.
+
+* Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
+* Broker SHALL force disconnect Broker if any error occurs.
+
+### Examples
 
 Start a **Broker**
 ```
@@ -162,39 +191,14 @@ client.request('my-service', 'foo', function (err, data) {
 #### Notes
 * when using a `inproc` socket the broker *must* become active before any queued messages.
 
-### Protocol
-
-#### Benefits
-* Reliable request / reply protocol
-* Scalability
-* Multi-Worker : infinite services and infinite workers for each service
-* Multi-Client : infinite clients
-* Multi-Broker : infinite brokers to avoid bottlenecks and improve network reliability
-
-#### Features
-* Support for partial replies.
-* Client multi-request support.
-* Worker concurrent requests.
-* Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
-
-#### Specification (good for RFC)
-* Worker <-> Broker heartbeating.
-* Broker MAY track Worker/Client/Request relation.
-* Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. 
-* Worker MAY decide to stop an inactive Request (tracks liveness for Request).
-* Client MAY assign a timeout to a Request.
-* Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
-* Broker SHALL force disconnect Broker if any error occurs.
-
-#### Roadmap
+### Roadmap
 * Add authentication support through [zmq-zap](https://github.com/msealand/zmq-zap.node) ZeroMQ ZAP to trust Clients and Workers.
-* Support [Titanic Service Protocol](http://rfc.zeromq.org/spec:9) for peristent requests.
 
-#### Follow me
+### Follow me
 
-* Fincluster - cloud financial platform : [fincluster](http://fincluster.com) /  [@fincluster](https://twitter.com/fincluster)
+* Fincluster - cloud financial investments platform : [fincluster](https://fincluster.com) /  [@fincluster](https://twitter.com/fincluster)
 * My personal blog : [ardoino.com](http://ardoino.com) / [@paoloardoino](https://twitter.com/paoloardoino)
 
-#### Contributors
+### Contributors
 * [bmeck](https://github.com/bmeck)
 * [maxired](https://github.com/maxired)
