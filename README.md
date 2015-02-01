@@ -5,7 +5,7 @@ PIGATO
 
 **PIGATO - an high-performance microservices framework for Node.js based on ZeroMQ**
 
-PIGATO aims to offer a high-performance, reliable, scalable and extensible service-oriented framework for Node.js.
+PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework for Node.js.
 
 ### Structure and Protocol
 
