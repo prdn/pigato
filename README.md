@@ -9,6 +9,7 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 
 ### Structure and Protocol
 
+
 #### Structure
 * Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible
 * Client : creates, pushes Requests and waits for results. A request always includes a service name and data for the Worker
@@ -16,8 +17,8 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 
 #### Benefits
 * High-performance
-* Realiable
-* Distributed and highly Scalable
+* Realiable, Distributed and Scalable
+* Load Balancing
 * Multi-Worker : infinite Services and infinite Workers for each service
 * Multi-Client : infinite Clients
 * Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability
