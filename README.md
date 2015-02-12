@@ -3,9 +3,9 @@ PIGATO
 
 [![PIGATO](http://ardoino.com/pub/pigato-200.png)](https://github.com/prdn/pigato)
 
-**PIGATO - an high-performance microservices framework for Node.js based on ZeroMQ**
+**PIGATO - an high-performance microservices framework for Node.js and io.js based on ZeroMQ**
 
-PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework for Node.js.
+PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework for Node.js and io.js.
 
 ### Structure and Protocol
 
