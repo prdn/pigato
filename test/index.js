@@ -115,7 +115,7 @@ describe('BASE', function() {
   });
 
   it('Client partial/final request (callback) with wildcard', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = "foo"
 
     var worker = new PIGATO.Worker(location, ns + '/*');
@@ -149,7 +149,7 @@ describe('BASE', function() {
 
 
   it('Client partial/final request (callback); Classical worker has priority over wildcard', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = "foo";
     var chunkW = "wildcard";
 
@@ -197,7 +197,7 @@ describe('BASE', function() {
   });
 
   it('Client partial/final request (callback); wild request will match wildcard', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = "foo";
     var chunkW = "wildcard";
 
@@ -241,7 +241,7 @@ describe('BASE', function() {
   });
 
 it('Client partial/final request (callback); wildcard mechanism choose the best match', function(done) {
-    var ns = uuid.generate();
+    var ns = uuid.v4();
     var chunk = "norf";
     var chunkW1 = "Generic wildcard";
     var chunkW2 = "less Generic wildcard";
