@@ -86,7 +86,7 @@ broker.start(function(){});
 
 #### `pigato.Worker(addr, serviceName, conf)`
 * `addr` - Broker address (string, i.e: 'tcp://localhost:12345') 
-* `serviceName` - service implemented by the Worker (string, i.e: 'echo')
+* `serviceName` - service implemented by the Worker (string, i.e: 'echo'). Wildcard '*' is supported
 * `conf` - configuration override (object: { concurrency: 20 })
   * `concurrency` - sets max number of concurrent requests (-1 = no limit)
 

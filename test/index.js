@@ -343,24 +343,35 @@ describe('Wildcards', function () {
     var worker = new PIGATO.Worker(bhost, ns + '*');
     var chunk = 'foo';
     
-    client.start();
     worker.start();
+    
+    client.start();
 
     worker.on('request', function(inp, res) {
       res.end(inp + ':bar');
     });
 
-    client.request(ns + '-test', chunk, { timeout: 5000 })
-    .on('data', function(data) {
-      console.log("ciaooo");
-      chai.assert.equal(data, chunk + ':bar');
-    })
-    .on('error', function (err) {
-      stop(err);
-    })
-    .on('end', function() {
-      stop();
-    });
+    var rcnt = 0;
+
+    function request() {
+      client.request(ns + '-' + uuid.v4(), chunk, { timeout: 5000 })
+      .on('data', function(data) {
+        chai.assert.equal(data, chunk + ':bar');
+      })
+      .on('error', function (err) {
+        stop(err);
+      })
+      .on('end', function() {
+        rcnt++;
+        if (rcnt === 5) {
+          stop();
+        }
+      });
+    }
+
+    for (var i = 0; i < 5; i++) {
+      request();
+    }
 
     function stop(err) {
       client.stop();
