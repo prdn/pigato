@@ -2,17 +2,26 @@ var PIGATO = require('../');
 var chai = require('chai');
 var uuid = require('node-uuid');
 
-var location = 'inproc://#1';
+var location = 'inproc://#';
 
 describe('BASE', function() {
-  var broker = new PIGATO.Broker(location)
+  var bhost = location + uuid.v4();
+
+  var broker = new PIGATO.Broker(bhost)
   broker.start(function() {});
+
+  after(function(done) {
+    broker.stop();
+    setTimeout(function() {
+      done();
+    }, 1000);
+  });
 
   it('Client partial/final request (stream)', function(done) {
     var ns = uuid.v4();
     var chunk = 'foo';
 
-    var worker = new PIGATO.Worker(location, ns);
+    var worker = new PIGATO.Worker(bhost, ns);
 
     worker.on('request', function(inp, res) {
       for (var i = 0; i < 5; i++) {
@@ -23,7 +32,7 @@ describe('BASE', function() {
 
     worker.start();
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     var repIx = 0;
@@ -47,7 +56,7 @@ describe('BASE', function() {
     var ns = uuid.v4();
     var chunk = 'foo';
 
-    var worker = new PIGATO.Worker(location, ns);
+    var worker = new PIGATO.Worker(bhost, ns);
 
     worker.on('request', function(inp, res) {
       for (var i = 0; i < 5; i++) {
@@ -58,7 +67,7 @@ describe('BASE', function() {
 
     worker.start();
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     var repIx = 0;
@@ -85,7 +94,7 @@ describe('BASE', function() {
     var ns = uuid.v4();
     var chunk = { foo: 'bar' };
 
-    var worker = new PIGATO.Worker(location, ns);
+    var worker = new PIGATO.Worker(bhost, ns);
 
     worker.on('request', function(inp, res) {
       res.end(chunk);
@@ -93,7 +102,7 @@ describe('BASE', function() {
 
     worker.start();
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     var repIx = 0;
@@ -124,7 +133,7 @@ describe('BASE', function() {
     var workers = [];
 
     function spawn(fn) {
-      var worker = new PIGATO.Worker(location, ns);
+      var worker = new PIGATO.Worker(bhost, ns);
       worker.on('request', fn);
 
       worker.start();
@@ -138,7 +147,7 @@ describe('BASE', function() {
       });
     });
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     client.request(
@@ -167,7 +176,7 @@ describe('BASE', function() {
     var workers = [];
 
     function spawn(id) {
-      var worker = new PIGATO.Worker(location, ns);
+      var worker = new PIGATO.Worker(bhost, ns);
       worker.on('request', function(inp, res) {
         setTimeout(function() {
           res.end(chunk + '/' + id);
@@ -180,7 +189,7 @@ describe('BASE', function() {
       return worker;
     };
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     client.request(
@@ -211,7 +220,7 @@ describe('BASE', function() {
     var ns = uuid.v4();
     var chunk = 'SOMETHING_FAILED';
 
-    var worker = new PIGATO.Worker(location, ns);
+    var worker = new PIGATO.Worker(bhost, ns);
 
     worker.on('request', function(inp, res) {
       res.error(chunk);
@@ -219,7 +228,7 @@ describe('BASE', function() {
 
     worker.start();
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     client.request(
@@ -240,7 +249,7 @@ describe('BASE', function() {
     var ns = uuid.v4();
     var chunk = 'SOMETHING_FAILED';
 
-    var worker = new PIGATO.Worker(location, ns);
+    var worker = new PIGATO.Worker(bhost, ns);
 
     worker.on('request', function(inp, res) {
       res.error(chunk);
@@ -248,7 +257,7 @@ describe('BASE', function() {
 
     worker.start();
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     client.request(
@@ -272,7 +281,7 @@ describe('BASE', function() {
     var ns = uuid.v4();
     this.timeout(5000);
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     client.request(
@@ -293,7 +302,7 @@ describe('BASE', function() {
     var ns = uuid.v4();
     this.timeout(5000);
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     client.request(
@@ -313,17 +322,74 @@ describe('BASE', function() {
   });
 });
 
-describe('Resend after timout', function () {
-  var broker = new PIGATO.Broker(location);
+describe('Wildcards', function () {
+  var bhost = location + uuid.v4();
+
+  var broker = new PIGATO.Broker(bhost);
   broker.start(function() {});
+
+  after(function(done) {
+    broker.stop();
+    setTimeout(function() {
+      done();
+    }, 1000);
+  });
+
+  it('test1', function (done) {
+    var ns = uuid.v4();
+    this.timeout(5000);
+
+    var client = new PIGATO.Client(bhost);
+    var worker = new PIGATO.Worker(bhost, ns + '*');
+    var chunk = 'foo';
+    
+    client.start();
+    worker.start();
+
+    worker.on('request', function(inp, res) {
+      res.end(inp + ':bar');
+    });
+
+    client.request(ns + '-test', chunk, { timeout: 5000 })
+    .on('data', function(data) {
+      console.log("ciaooo");
+      chai.assert.equal(data, chunk + ':bar');
+    })
+    .on('error', function (err) {
+      stop(err);
+    })
+    .on('end', function() {
+      stop();
+    });
+
+    function stop(err) {
+      client.stop();
+      worker.stop();
+      done(err);
+    }
+  })
+});
+
+describe('Resend after timout', function () {
+  var bhost = location + uuid.v4();
+
+  var broker = new PIGATO.Broker(bhost);
+  broker.start(function() {});
+
+  after(function(done) {
+    broker.stop();
+    setTimeout(function() {
+      done();
+    }, 1000);
+  });
 
   it('Supports resending after worker dies', function (done) {
     var ns = uuid.v4();
     this.timeout(15000);
 
-    var client = new PIGATO.Client(location);
-    var worker = new PIGATO.Worker(location, ns);
-    var backupWorker = new PIGATO.Worker(location, ns);
+    var client = new PIGATO.Client(bhost);
+    var worker = new PIGATO.Worker(bhost, ns);
+    var backupWorker = new PIGATO.Worker(bhost, ns);
     var chunk = 'foo';
     
     client.start();
@@ -378,10 +444,17 @@ describe('Resend after timout', function () {
 });
 
 describe('Concurrency', function () {
-  var broker = new PIGATO.Broker(location);
+  var bhost = location + uuid.v4();
+
+  var broker = new PIGATO.Broker(bhost);
   broker.start(function() {});
 
- it('20 concurrent requests', function(done) {
+  after(function(done) {
+    broker.stop();
+    done();
+  });
+
+  it('20 concurrent requests', function(done) {
     var ns = uuid.v4();
     var chunk = 'bar';
     
@@ -389,7 +462,7 @@ describe('Concurrency', function () {
 
     var cc = 20;
     
-    var worker = new PIGATO.Worker(location, ns, { concurrency: cc });
+    var worker = new PIGATO.Worker(bhost, ns, { concurrency: cc });
 
     var reqIx = 0;
 
@@ -409,7 +482,7 @@ describe('Concurrency', function () {
 
     worker.start();
 
-    var client = new PIGATO.Client(location);
+    var client = new PIGATO.Client(bhost);
     client.start();
 
     var repIx = 0;
