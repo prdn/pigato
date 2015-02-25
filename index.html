@@ -33,9 +33,9 @@
 
 <p><a href="https://github.com/prdn/pigato"><img src="http://ardoino.com/pub/pigato-200.png" alt="PIGATO"></a></p>
 
-<p><strong>PIGATO - an high-performance microservices framework for Node.js based on ZeroMQ</strong></p>
+<p><strong>PIGATO - an high-performance microservices framework for Node.js and io.js based on ZeroMQ</strong></p>
 
-<p>PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework for Node.js.</p>
+<p>PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework for Node.js and io.js.</p>
 
 <h3>
 <a id="structure-and-protocol" class="anchor" href="#structure-and-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure and Protocol</h3>
@@ -54,8 +54,8 @@
 
 <ul>
 <li>High-performance</li>
-<li>Realiable</li>
-<li>Distributed and highly Scalable</li>
+<li>Realiable, Distributed and Scalable</li>
+<li>Load Balancing</li>
 <li>Multi-Worker : infinite Services and infinite Workers for each service</li>
 <li>Multi-Client : infinite Clients</li>
 <li>Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability</li>
@@ -144,7 +144,7 @@ broker.start(function(){});
 <li>
 <code>addr</code> - Broker address (string, i.e: 'tcp://localhost:12345') </li>
 <li>
-<code>serviceName</code> - service implemented by the Worker (string, i.e: 'echo')</li>
+<code>serviceName</code> - service implemented by the Worker (string, i.e: 'echo'). Wildcard '*' is supported</li>
 <li>
 <code>conf</code> - configuration override (object: { concurrency: 20 })
 
