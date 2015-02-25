@@ -1,6 +1,6 @@
 {
   "name": "pigato",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": false,
   "description": "An high-performance microservices framework for Node.js based on ZeroMQ",
   "author": "prdn <paolo.ardoino@gmail.com> (http://ardoino.com/)",
@@ -18,7 +18,7 @@
   "dependencies": {
     "async": "~0.9.0",
     "debug": "~2.0.0",
-    "lodash": "~3.2.0",
+    "lodash": "~3.3.0",
     "readable-stream": "~1.1.13",
     "node-uuid": "~1.4.2",
     "zmq": "~2.10.0"
