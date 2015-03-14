@@ -11,9 +11,5 @@ worker.on('error', function(e) {
 });
 
 worker.on('request', function(inp, rep) {
-  console.log("NEW REQUEST", inp)
-  for (var i = 0; i < 10; i++) {
-    rep.write('reply-partial');
-  }
-  rep.end('reply-final');
+  rep.end(inp);
 });
