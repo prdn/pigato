@@ -10,7 +10,7 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 ### Structure and Protocol
 
 
-#### Structure
+#### Actors
 * Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible
 * Client : creates, pushes Requests and waits for results. A request always includes a service name and data for the Worker
 * Broker : handles Requests queueing and routing
@@ -19,15 +19,16 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * High-performance
 * Realiable, Distributed and Scalable
 * Load Balancing
-* Multi-Worker : infinite Services and infinite Workers for each service
+* No central point of failure
+* Multi-Worker : infinite Services and infinite Workers for each Service
 * Multi-Client : infinite Clients
 * Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability
 
 #### Features
 * Request / Reply protocol
 * Support for partial Replies
-* Streaming Requests
-* Client multi-Request support
+* Client concurrent Requests
+* Client streaming Requests
 * Worker concurrent Requests
 * Worker dynamic load balancing
 * Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
@@ -81,12 +82,15 @@ Simply starts up a broker.
 var Broker = require('./../index').Broker;
 
 var broker = new Broker("tcp://*:55555");
-broker.start(function(){});
+broker.start(function() {
+  console.log("Broker started");
+});
 ```
 
 #### `pigato.Worker(addr, serviceName, conf)`
 * `addr` - Broker address (string, i.e: 'tcp://localhost:12345') 
-* `serviceName` - service implemented by the Worker (string, i.e: 'echo'). Wildcard '*' is supported
+* `serviceName` - service implemented by the Worker (string, i.e: 'echo')
+  * wildcards * are supported (i.e: 'ech*')
 * `conf` - configuration override (object: { concurrency: 20 })
   * `concurrency` - sets max number of concurrent requests (-1 = no limit)
 
@@ -109,16 +113,18 @@ Example:
 var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
 
 worker.on('request', function(data, reply) {
-  fs.createReadStream(data).pipe(reply);
-});
-
-// or
-worker.on('request', function(data, reply) {
   for (var i = 0; i < 1000; i++) {
     reply.write('PARTIAL DATA ' + i);
   }
   reply.end('FINAL DATA');
 });
+
+// or
+
+worker.on('request', function(data, reply) {
+  fs.createReadStream(data).pipe(reply);
+});
+
 ```
 
 Worker may also specify whether the reply should be cached and the cache timeout in milliseconds 
