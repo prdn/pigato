@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>Pigato</h1>
-        <p>PIGATO - a microservices framework for Node.js based on ZeroMQ</p>
+        <p>PIGATO - an high-performance microservices framework based on ZeroMQ</p>
 
         <p class="view"><a href="https://github.com/prdn/pigato">View the Project on GitHub <small>prdn/pigato</small></a></p>
 
@@ -33,15 +33,15 @@
 
 <p><a href="https://github.com/prdn/pigato"><img src="http://ardoino.com/pub/pigato-200.png" alt="PIGATO"></a></p>
 
-<p><strong>PIGATO - an high-performance microservices framework for Node.js and io.js based on ZeroMQ</strong></p>
+<p><strong>PIGATO - an high-performance microservices framework based on ZeroMQ</strong></p>
 
-<p>PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework for Node.js and io.js.</p>
+<p>PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework supporting multiple programming languages: Node.js/Io.js and Ruby.</p>
 
 <h3>
 <a id="structure-and-protocol" class="anchor" href="#structure-and-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure and Protocol</h3>
 
 <h4>
-<a id="structure" class="anchor" href="#structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure</h4>
+<a id="actors" class="anchor" href="#actors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Actors</h4>
 
 <ul>
 <li>Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible</li>
@@ -56,7 +56,8 @@
 <li>High-performance</li>
 <li>Realiable, Distributed and Scalable</li>
 <li>Load Balancing</li>
-<li>Multi-Worker : infinite Services and infinite Workers for each service</li>
+<li>No central point of failure</li>
+<li>Multi-Worker : infinite Services and infinite Workers for each Service</li>
 <li>Multi-Client : infinite Clients</li>
 <li>Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability</li>
 </ul>
@@ -67,8 +68,8 @@
 <ul>
 <li>Request / Reply protocol</li>
 <li>Support for partial Replies</li>
-<li>Streaming Requests</li>
-<li>Client multi-Request support</li>
+<li>Client concurrent Requests</li>
+<li>Client streaming Requests</li>
 <li>Worker concurrent Requests</li>
 <li>Worker dynamic load balancing</li>
 <li>Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).</li>
@@ -82,9 +83,9 @@
 <li>Broker tracks Worker/Client/Request relation.</li>
 <li>Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. </li>
 <li>Worker MAY decide to stop an inactive Request (tracks liveness for Request).</li>
-<li><p>Client MAY assign a timeout to a Request.</p></li>
-<li><p>Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.</p></li>
-<li>Broker SHALL force disconnect Broker if any error occurs.</li>
+<li>Client MAY assign a timeout to a Request.</li>
+<li>Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.</li>
+<li>Broker SHALL force disconnect Worker if any error occurs.</li>
 </ul>
 
 <h3>
@@ -133,7 +134,9 @@ node examples/echo/client
 <pre><code>var Broker = require('./../index').Broker;
 
 var broker = new Broker("tcp://*:55555");
-broker.start(function(){});
+broker.start(function() {
+  console.log("Broker started");
+});
 </code></pre>
 
 <h4>
@@ -142,15 +145,20 @@ broker.start(function(){});
 
 <ul>
 <li>
-<code>addr</code> - Broker address (string, i.e: 'tcp://localhost:12345') </li>
+<code>addr</code> - Broker address (type=string, i.e: 'tcp://localhost:12345') </li>
 <li>
-<code>serviceName</code> - service implemented by the Worker (string, i.e: 'echo'). Wildcard '*' is supported</li>
+<code>serviceName</code> - service implemented by the Worker (type=string, i.e: 'echo')
+
+<ul>
+<li>wildcards * are supported (i.e: 'ech*')</li>
+</ul>
+</li>
 <li>
-<code>conf</code> - configuration override (object: { concurrency: 20 })
+<code>conf</code> - configuration override (type=object, i.e { concurrency: 20 })
 
 <ul>
 <li>
-<code>concurrency</code> - sets max number of concurrent requests (-1 = no limit)</li>
+<code>concurrency</code> - sets max number of concurrent requests (type=int, -1 = no limit)</li>
 </ul>
 </li>
 </ul>
@@ -159,26 +167,26 @@ broker.start(function(){});
 
 <ul>
 <li>
-<code>data</code> - value sent by a client for this request.</li>
+<code>data</code> - data sent from the Client (type=string/object/array).</li>
 <li>
-<code>reply</code> - extended writable stream to send data to the client.</li>
+<code>reply</code> - extended writable stream (type=object)</li>
 </ul>
 
 <p><code>reply</code> writable stream exposes also following methods and attributes:</p>
 
 <ul>
 <li>
-<code>write()</code> - sends partial data to the client (triggers partial callback). It is used internally to implement writable streams.</li>
+<code>write()</code> - sends partial data to the Client </li>
 <li>
-<code>end()</code> - sends last data to the client (triggers final callback) and completes/closes current request. Use this method for single-reply requests.</li>
+<code>end()</code> - sends last data to the Client and completes/closes current Request</li>
 <li>
-<code>reject()</code> - rejects a request.</li>
+<code>reject()</code> - rejects a Request.</li>
 <li>
-<code>heartbeat()</code> - forces sending heartbeat to the broker and client</li>
+<code>heartbeat()</code> - forces sending heartbeat to the Broker</li>
 <li>
-<code>active()</code> - returns (boolean) the status of the request. A request becomes inactive when the worker disconnects from the broker or it is discarded by the client or the client disconnects from the broker. This is useful for long running tasks and Worker can monitor whether or not continue processing a request.</li>
+<code>active()</code> - returns the status of the Request (type=boolean). A Request becomes inactive when the Worker disconnects from the Broker or it has been discarded by the Client or the Client disconnects from the Broker. This is useful for long running tasks so the Worker can monitor whether or not continue processing a Request.</li>
 <li>
-<code>ended</code> - tells (boolean) if the request has been ended.</li>
+<code>ended</code> - tells if the Request has been ended (type=boolean).</li>
 </ul>
 
 <p>Example:</p>
@@ -186,16 +194,17 @@ broker.start(function(){});
 <pre><code>var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
 
 worker.on('request', function(data, reply) {
-  fs.createReadStream(data).pipe(reply);
-});
-
-// or
-worker.on('request', function(data, reply) {
   for (var i = 0; i &lt; 1000; i++) {
     reply.write('PARTIAL DATA ' + i);
   }
   reply.end('FINAL DATA');
 });
+
+// or
+worker.on('request', function(data, reply) {
+  fs.createReadStream(data).pipe(reply);
+});
+
 </code></pre>
 
 <p>Worker may also specify whether the reply should be cached and the cache timeout in milliseconds </p>
@@ -230,20 +239,25 @@ worker.on('request', function(data, reply) {
 
 <ul>
 <li>
-<code>serviceName</code> - name of the service we wish to connect to</li>
+<code>serviceName</code> - name of the Service we wish to connect to (type=string)</li>
 <li>
-<code>data</code> - data to give to the service (string/object/buffer)</li>
+<code>data</code> - data to give to the Service (type=string/object/buffer)</li>
 <li>
-<code>opts</code> - options object for the request</li>
+<code>opts</code> - options for the Request (type=object)
+
+<ul>
+<li>
+<code>timeout</code>: timeout in milliseconds (type=number, default=60000, -1 for infinite timeout)</li>
+<li>
+<code>retry</code>: if a Worker dies before replying, the Request is automatically requeued. (type=number, values=0|1, default=0)</li>
+</ul>
+</li>
 </ul>
 
 <p>Example:</p>
 
 <pre><code>var client = new PIGATO.Client('tcp://localhost:12345');
 
-client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
-
-// or
 client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('data', function(data) {
   console.log("DATA", data);    
@@ -251,6 +265,9 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('end', function() {
   console.log("END");     
 });
+
+// or
+client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 </code></pre>
 
 <p>Clients may also make request with partial and final callbacks instead of using streams.</p>
@@ -276,17 +293,6 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 }, { timeout: 30000 });
 
 </code></pre>
-
-<h5>
-<a id="request-options" class="anchor" href="#request-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request options</h5>
-
-<ul>
-<li>
-<code>timeout</code> : timeout in milliseconds; number <a href="-1%20to%20disable%20=%20time%20unlimited%20request">default 60000</a>
-</li>
-<li>
-<code>retry</code> : if a Worker dies before replying, the Request is automatically requeued. number 0|1 [default 0]</li>
-</ul>
 
 <h4>
 <a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h4>
