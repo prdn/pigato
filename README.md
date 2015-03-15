@@ -149,9 +149,11 @@ Take note: due to the framing protocol of `zmq` only the data supplied to `respo
 
 Clients may make requests using `Client.request(...)` method.
 
-* `serviceName` - name of the service we wish to connect to
-* `data` - data to give to the service (string/object/buffer)
-* `opts` - options object for the request
+* `serviceName` - name of the Service we wish to connect to (type=string)
+* `data` - data to give to the Service (type=string/object/buffer)
+* `opts` - options for the Request (type=object)
+  * `timeout`: timeout in milliseconds (type=number, default=60000, -1 for infinite timeout)
+  * `retry`: if a Worker dies before replying, the Request is automatically requeued. (type=number, values=0|1, default=0)
 
 Example:
 ```
@@ -176,8 +178,6 @@ Clients may also make request with partial and final callbacks instead of using 
 * `partialCallback(err, data)` - called whenever the request does not end but emits data
 * `finalCallback(err, data)` - called when the request will emit no more data
 * `opts`
-  * `timeout`: timeout in milliseconds; number [default 60000] (-1 to disable = time unlimited request)
-  * `retry`: if a Worker dies before replying, the Request is automatically requeued. number 0|1 [default 0]
 
 Example:
 ```
