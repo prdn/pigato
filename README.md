@@ -39,7 +39,6 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. 
 * Worker MAY decide to stop an inactive Request (tracks liveness for Request).
 * Client MAY assign a timeout to a Request.
-
 * Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
 * Broker SHALL force disconnect Worker if any error occurs.
 
