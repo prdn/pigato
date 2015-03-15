@@ -7,8 +7,14 @@ PIGATO
 
 PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework supporting multiple programming languages: Node.js/Io.js and Ruby.
 
-### Structure and Protocol
 
+**Supported Programming Languages**
+
+[PIGATO](https://github.com/prdn/pigato) : PIGATO Client/Worker/Broker for Node.js and Io.js 
+[PIGATO-RUBY](https://github.com/prdn/pigato-ruby) : PIGATO Client/Worker for Ruby
+
+
+### Structure and Protocol
 
 #### Actors
 * Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible
@@ -32,15 +38,6 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * Worker concurrent Requests
 * Worker dynamic load balancing
 * Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
-
-#### Specification (good for RFC)
-* Worker <-> Broker heartbeating.
-* Broker tracks Worker/Client/Request relation.
-* Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. 
-* Worker MAY decide to stop an inactive Request (tracks liveness for Request).
-* Client MAY assign a timeout to a Request.
-* Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
-* Broker SHALL force disconnect Worker if any error occurs.
 
 ### Examples
 
@@ -193,6 +190,15 @@ client.request('my-service', 'foo', function (err, data) {
 
 #### Notes
 * when using a `inproc` socket the broker *must* become active before any queued messages.
+
+#### Specification (good for RFC)
+* Worker <-> Broker heartbeating.
+* Broker tracks Worker/Client/Request relation.
+* Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. 
+* Worker MAY decide to stop an inactive Request (tracks liveness for Request).
+* Client MAY assign a timeout to a Request.
+* Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
+* Broker SHALL force disconnect Worker if any error occurs.
 
 ### Roadmap
 * Add authentication support through [zmq-zap](https://github.com/msealand/zmq-zap.node) ZeroMQ ZAP to trust Clients and Workers.
