@@ -41,7 +41,7 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * Client MAY assign a timeout to a Request.
 
 * Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
-* Broker SHALL force disconnect Broker if any error occurs.
+* Broker SHALL force disconnect Worker if any error occurs.
 
 ### Examples
 
