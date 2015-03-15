@@ -88,25 +88,25 @@ broker.start(function() {
 ```
 
 #### `pigato.Worker(addr, serviceName, conf)`
-* `addr` - Broker address (string, i.e: 'tcp://localhost:12345') 
-* `serviceName` - service implemented by the Worker (string, i.e: 'echo')
+* `addr` - Broker address (type=string, i.e: 'tcp://localhost:12345') 
+* `serviceName` - service implemented by the Worker (type=string, i.e: 'echo')
   * wildcards * are supported (i.e: 'ech*')
-* `conf` - configuration override (object: { concurrency: 20 })
-  * `concurrency` - sets max number of concurrent requests (-1 = no limit)
+* `conf` - configuration override (type=object, i.e { concurrency: 20 })
+  * `concurrency` - sets max number of concurrent requests (type=int, -1 = no limit)
 
 Worker receives `"request"` events with 2 arguments:
 
-* `data` - value sent by a client for this request.
-* `reply` - extended writable stream to send data to the client.
+* `data` - data sent from the Client (type=string/object/array).
+* `reply` - extended writable stream (type=object)
 
 `reply` writable stream exposes also following methods and attributes:
 
-* `write()` - sends partial data to the client (triggers partial callback). It is used internally to implement writable streams.
-* `end()` - sends last data to the client (triggers final callback) and completes/closes current request. Use this method for single-reply requests.
-* `reject()` - rejects a request.
-* `heartbeat()` - forces sending heartbeat to the broker and client
-* `active()` - returns (boolean) the status of the request. A request becomes inactive when the worker disconnects from the broker or it is discarded by the client or the client disconnects from the broker. This is useful for long running tasks and Worker can monitor whether or not continue processing a request.
-* `ended` - tells (boolean) if the request has been ended.
+* `write()` - sends partial data to the Client 
+* `end()` - sends last data to the Client and completes/closes current Request
+* `reject()` - rejects a Request.
+* `heartbeat()` - forces sending heartbeat to the Broker
+* `active()` - returns the status of the Request (type=boolean). A Request becomes inactive when the Worker disconnects from the Broker or it has been discarded by the Client or the Client disconnects from the Broker. This is useful for long running tasks so the Worker can monitor whether or not continue processing a Request.
+* `ended` - tells if the Request has been ended (type=boolean).
 
 Example:
 ```
@@ -120,7 +120,6 @@ worker.on('request', function(data, reply) {
 });
 
 // or
-
 worker.on('request', function(data, reply) {
   fs.createReadStream(data).pipe(reply);
 });
@@ -159,9 +158,6 @@ Example:
 ```
 var client = new PIGATO.Client('tcp://localhost:12345');
 
-client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
-
-// or
 client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('data', function(data) {
   console.log("DATA", data);	
@@ -169,6 +165,9 @@ client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('end', function() {
   console.log("END");	  
 });
+
+// or
+client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 ```
 
 Clients may also make request with partial and final callbacks instead of using streams.
@@ -178,6 +177,8 @@ Clients may also make request with partial and final callbacks instead of using 
 * `partialCallback(err, data)` - called whenever the request does not end but emits data
 * `finalCallback(err, data)` - called when the request will emit no more data
 * `opts`
+  * `timeout`: timeout in milliseconds; number [default 60000] (-1 to disable = time unlimited request)
+  * `retry`: if a Worker dies before replying, the Request is automatically requeued. number 0|1 [default 0]
 
 Example:
 ```
@@ -190,10 +191,6 @@ client.request('my-service', 'foo', function (err, data) {
 }, { timeout: 30000 });
 
 ```
-
-##### Request options
-* `timeout` : timeout in milliseconds; number [default 60000] (-1 to disable = time unlimited request)
-* `retry` : if a Worker dies before replying, the Request is automatically requeued. number 0|1 [default 0]
 
 #### Notes
 * when using a `inproc` socket the broker *must* become active before any queued messages.
