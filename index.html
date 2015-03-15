@@ -37,6 +37,15 @@
 
 <p>PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework supporting multiple programming languages: Node.js/Io.js and Ruby.</p>
 
+<p><strong>Supported Programming Languages</strong></p>
+
+<ul>
+<li>
+<a href="https://github.com/prdn/pigato">PIGATO</a> : PIGATO Client/Worker/Broker for Node.js and Io.js </li>
+<li>
+<a href="https://github.com/prdn/pigato-ruby">PIGATO-RUBY</a> : PIGATO Client/Worker for Ruby</li>
+</ul>
+
 <h3>
 <a id="structure-and-protocol" class="anchor" href="#structure-and-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure and Protocol</h3>
 
@@ -73,19 +82,6 @@
 <li>Worker concurrent Requests</li>
 <li>Worker dynamic load balancing</li>
 <li>Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).</li>
-</ul>
-
-<h4>
-<a id="specification-good-for-rfc" class="anchor" href="#specification-good-for-rfc" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specification (good for RFC)</h4>
-
-<ul>
-<li>Worker &lt;-&gt; Broker heartbeating.</li>
-<li>Broker tracks Worker/Client/Request relation.</li>
-<li>Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. </li>
-<li>Worker MAY decide to stop an inactive Request (tracks liveness for Request).</li>
-<li>Client MAY assign a timeout to a Request.</li>
-<li>Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.</li>
-<li>Broker SHALL force disconnect Worker if any error occurs.</li>
 </ul>
 
 <h3>
@@ -299,6 +295,19 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 
 <ul>
 <li>when using a <code>inproc</code> socket the broker <em>must</em> become active before any queued messages.</li>
+</ul>
+
+<h4>
+<a id="specification-good-for-rfc" class="anchor" href="#specification-good-for-rfc" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specification (good for RFC)</h4>
+
+<ul>
+<li>Worker &lt;-&gt; Broker heartbeating.</li>
+<li>Broker tracks Worker/Client/Request relation.</li>
+<li>Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. </li>
+<li>Worker MAY decide to stop an inactive Request (tracks liveness for Request).</li>
+<li>Client MAY assign a timeout to a Request.</li>
+<li>Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.</li>
+<li>Broker SHALL force disconnect Worker if any error occurs.</li>
 </ul>
 
 <h3>
