@@ -69,7 +69,7 @@ More examples
 
 ## API
 
-### Worker
+### Broker
 #### `PIGATO.Broker(addr, conf)`
 * `addr` - Broker address (string, i.e: 'tcp://*:12345') 
 
