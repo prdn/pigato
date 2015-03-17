@@ -14,14 +14,14 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * [PIGATO-RUBY](https://github.com/prdn/pigato-ruby) : PIGATO Client/Worker for Ruby
 
 
-### Structure and Protocol
+## Structure and Protocol
 
-#### Actors
+### Actors
 * Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible
 * Client : creates, pushes Requests and waits for results. A request always includes a service name and data for the Worker
 * Broker : handles Requests queueing and routing
 
-#### Benefits
+### Benefits
 * High-performance
 * Realiable, Distributed and Scalable
 * Load Balancing
@@ -30,7 +30,7 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * Multi-Client : infinite Clients
 * Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability
 
-#### Features
+### Features
 * Request / Reply protocol
 * Support for partial Replies
 * Client concurrent Requests
@@ -39,7 +39,7 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 * Worker dynamic load balancing
 * Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).
 
-### Examples
+## Examples
 
 Start a **Broker**
 ```
@@ -63,13 +63,13 @@ More examples
 
 [PIGATO-EXAMPLES](https://github.com/fincluster/pigato-examples) : a collection of multi-purpose useful examples.
 
-#### Performance
+### Performance
 
 [PIGATO-PERF](https://github.com/prdn/pigato-perf) : a command-line tool to test PIGATO performances in different scenarios.
 
-### API
+## API
 
-#### `pigato.Broker(addr)`
+### `pigato.Broker(addr)`
 * `addr` - Broker address (string, i.e: 'tcp://*:12345') 
 
 Simply starts up a broker.
@@ -83,7 +83,7 @@ broker.start(function() {
 });
 ```
 
-#### `pigato.Worker(addr, serviceName, conf)`
+### `pigato.Worker(addr, serviceName, conf)`
 * `addr` - Broker address (type=string, i.e: 'tcp://localhost:12345') 
 * `serviceName` - service implemented by the Worker (type=string, i.e: 'echo')
   * wildcards * are supported (i.e: 'ech*')
@@ -107,6 +107,7 @@ Worker receives `"request"` events with 2 arguments:
 Example:
 ```
 var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
+worker.start();
 
 worker.on('request', function(data, reply) {
   for (var i = 0; i < 1000; i++) {
@@ -124,7 +125,8 @@ worker.on('request', function(data, reply) {
 
 Worker may also specify whether the reply should be cached and the cache timeout in milliseconds 
 
-Example:
+**Example**
+
 ```
 worker.on('request', function(data, reply) {
   reply.opts.cache = 1000; // cache reply for 1 second
@@ -134,17 +136,28 @@ worker.on('request', function(data, reply) {
 
 Worker can change concurrency level updating its configuration. This information is carried with the heartbeat message.
 
-Example:
+**Example**
+
 ```
 worker.conf.concurrency = 2;
 ```
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
 
-#### `PIGATO.Client(addrs)`
+### `PIGATO.Client(addrs)`
 * `addrs` - list of Broker addresses (array)
+* `conf`
+  * `autostart`: automatically starts the Client (type=boolean, default=false) 
 
-Clients may make requests using `Client.request(...)` method.
+#### Methods
+
+##### `start
+
+Start the Client
+
+##### `request`
+
+Send a Request
 
 * `serviceName` - name of the Service we wish to connect to (type=string)
 * `data` - data to give to the Service (type=string/object/buffer)
@@ -152,9 +165,12 @@ Clients may make requests using `Client.request(...)` method.
   * `timeout`: timeout in milliseconds (type=number, default=60000, -1 for infinite timeout)
   * `retry`: if a Worker dies before replying, the Request is automatically requeued. (type=number, values=0|1, default=0)
 
-Example:
+
+**Example**
+
 ```
 var client = new PIGATO.Client('tcp://localhost:12345');
+client.start()
 
 client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('data', function(data) {
@@ -176,7 +192,8 @@ Clients may also make request with partial and final callbacks instead of using 
 * `finalCallback(err, data)` - called when the request will emit no more data
 * `opts`
 
-Example:
+**Example**
+
 ```
 client.request('my-service', 'foo', function (err, data) {
   // frames sent prior to final frame
@@ -188,10 +205,10 @@ client.request('my-service', 'foo', function (err, data) {
 
 ```
 
-#### Notes
+### Notes
 * when using a `inproc` socket the broker *must* become active before any queued messages.
 
-#### Specification (good for RFC)
+## Specification (good for RFC)
 * Worker <-> Broker heartbeating.
 * Broker tracks Worker/Client/Request relation.
 * Client MAY send heartbeat for active request. If the request is being processed by Worker, Broker forwards heartbeat to Worker. 
@@ -200,14 +217,14 @@ client.request('my-service', 'foo', function (err, data) {
 * Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
 * Broker SHALL force disconnect Worker if any error occurs.
 
-### Roadmap
+## Roadmap
 * Add authentication support through [zmq-zap](https://github.com/msealand/zmq-zap.node) ZeroMQ ZAP to trust Clients and Workers.
 
-### Follow me
+## Follow me
 
 * Fincluster - cloud financial investments platform : [fincluster](https://fincluster.com) /  [@fincluster](https://twitter.com/fincluster)
 * My personal blog : [ardoino.com](http://ardoino.com) / [@paoloardoino](https://twitter.com/paoloardoino)
 
-### Contributors
+## Contributors
 * [bmeck](https://github.com/bmeck)
 * [maxired](https://github.com/maxired)
