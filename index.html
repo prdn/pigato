@@ -46,11 +46,11 @@
 <a href="https://github.com/prdn/pigato-ruby">PIGATO-RUBY</a> : PIGATO Client/Worker for Ruby</li>
 </ul>
 
-<h3>
-<a id="structure-and-protocol" class="anchor" href="#structure-and-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure and Protocol</h3>
+<h2>
+<a id="structure-and-protocol" class="anchor" href="#structure-and-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Structure and Protocol</h2>
 
-<h4>
-<a id="actors" class="anchor" href="#actors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Actors</h4>
+<h3>
+<a id="actors" class="anchor" href="#actors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Actors</h3>
 
 <ul>
 <li>Worker : receives requests, does something and replies. A Worker offers a Service, should be a functionality as atomic as possible</li>
@@ -58,8 +58,8 @@
 <li>Broker : handles Requests queueing and routing</li>
 </ul>
 
-<h4>
-<a id="benefits" class="anchor" href="#benefits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benefits</h4>
+<h3>
+<a id="benefits" class="anchor" href="#benefits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benefits</h3>
 
 <ul>
 <li>High-performance</li>
@@ -71,8 +71,8 @@
 <li>Multi-Broker : infinite Brokers to avoid bottlenecks and improve network reliability</li>
 </ul>
 
-<h4>
-<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h4>
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
 
 <ul>
 <li>Request / Reply protocol</li>
@@ -84,8 +84,8 @@
 <li>Client heartbeating for long running requests. Allows Workers to dected whenever Clients disconnect or lose interest in some request. This feature is very useful to stop long-running partial requests (i.e data streaming).</li>
 </ul>
 
-<h3>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
 
 <p>Start a <strong>Broker</strong></p>
 
@@ -108,16 +108,19 @@ node examples/echo/client
 
 <p><a href="https://github.com/fincluster/pigato-examples">PIGATO-EXAMPLES</a> : a collection of multi-purpose useful examples.</p>
 
-<h4>
-<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance</h4>
+<h3>
+<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance</h3>
 
 <p><a href="https://github.com/prdn/pigato-perf">PIGATO-PERF</a> : a command-line tool to test PIGATO performances in different scenarios.</p>
 
+<h2>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
+
 <h3>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h3>
+<a id="broker" class="anchor" href="#broker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Broker</h3>
 
 <h4>
-<a id="pigatobrokeraddr" class="anchor" href="#pigatobrokeraddr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Broker(addr)</code>
+<a id="pigatobrokeraddr-conf" class="anchor" href="#pigatobrokeraddr-conf" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.Broker(addr, conf)</code>
 </h4>
 
 <ul>
@@ -135,8 +138,11 @@ broker.start(function() {
 });
 </code></pre>
 
+<h3>
+<a id="worker" class="anchor" href="#worker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Worker</h3>
+
 <h4>
-<a id="pigatoworkeraddr-servicename-conf" class="anchor" href="#pigatoworkeraddr-servicename-conf" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>pigato.Worker(addr, serviceName, conf)</code>
+<a id="pigatoworkeraddr-servicename-conf" class="anchor" href="#pigatoworkeraddr-servicename-conf" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.Worker(addr, serviceName, conf)</code>
 </h4>
 
 <ul>
@@ -159,7 +165,14 @@ broker.start(function() {
 </li>
 </ul>
 
-<p>Worker receives <code>"request"</code> events with 2 arguments:</p>
+<h4>
+<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h4>
+
+<h5>
+<a id="on" class="anchor" href="#on" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>on</code>
+</h5>
+
+<p>Worker receives <code>request</code> events with 2 arguments:</p>
 
 <ul>
 <li>
@@ -185,9 +198,10 @@ broker.start(function() {
 <code>ended</code> - tells if the Request has been ended (type=boolean).</li>
 </ul>
 
-<p>Example:</p>
+<p><strong>Example</strong></p>
 
 <pre><code>var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
+worker.start();
 
 worker.on('request', function(data, reply) {
   for (var i = 0; i &lt; 1000; i++) {
@@ -205,7 +219,7 @@ worker.on('request', function(data, reply) {
 
 <p>Worker may also specify whether the reply should be cached and the cache timeout in milliseconds </p>
 
-<p>Example:</p>
+<p><strong>Example</strong></p>
 
 <pre><code>worker.on('request', function(data, reply) {
   reply.opts.cache = 1000; // cache reply for 1 second
@@ -215,12 +229,15 @@ worker.on('request', function(data, reply) {
 
 <p>Worker can change concurrency level updating its configuration. This information is carried with the heartbeat message.</p>
 
-<p>Example:</p>
+<p><strong>Example</strong></p>
 
 <pre><code>worker.conf.concurrency = 2;
 </code></pre>
 
 <p>Take note: due to the framing protocol of <code>zmq</code> only the data supplied to <code>response.end(data)</code> will be given to the client's final callback.</p>
+
+<h3>
+<a id="client" class="anchor" href="#client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client</h3>
 
 <h4>
 <a id="pigatoclientaddrs" class="anchor" href="#pigatoclientaddrs" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.Client(addrs)</code>
@@ -229,9 +246,30 @@ worker.on('request', function(data, reply) {
 <ul>
 <li>
 <code>addrs</code> - list of Broker addresses (array)</li>
+<li>
+<code>conf</code>
+
+<ul>
+<li>
+<code>autostart</code>: automatically starts the Client (type=boolean, default=false) </li>
+</ul>
+</li>
 </ul>
 
-<p>Clients may make requests using <code>Client.request(...)</code> method.</p>
+<h4>
+<a id="methods-1" class="anchor" href="#methods-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h4>
+
+<h5>
+<a id="start" class="anchor" href="#start" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>start</code>
+</h5>
+
+<p>Start the Client</p>
+
+<h5>
+<a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>request</code>
+</h5>
+
+<p>Send a Request</p>
 
 <ul>
 <li>
@@ -250,9 +288,10 @@ worker.on('request', function(data, reply) {
 </li>
 </ul>
 
-<p>Example:</p>
+<p><strong>Example</strong></p>
 
 <pre><code>var client = new PIGATO.Client('tcp://localhost:12345');
+client.start()
 
 client.request('my-service', { foo: 'bar' }, { timeout: 120000 })
 .on('data', function(data) {
@@ -278,7 +317,7 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 <li><code>opts</code></li>
 </ul>
 
-<p>Example:</p>
+<p><strong>Example</strong></p>
 
 <pre><code>client.request('my-service', 'foo', function (err, data) {
   // frames sent prior to final frame
@@ -290,15 +329,15 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 
 </code></pre>
 
-<h4>
-<a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h4>
+<h3>
+<a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h3>
 
 <ul>
 <li>when using a <code>inproc</code> socket the broker <em>must</em> become active before any queued messages.</li>
 </ul>
 
-<h4>
-<a id="specification-good-for-rfc" class="anchor" href="#specification-good-for-rfc" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specification (good for RFC)</h4>
+<h2>
+<a id="specification-good-for-rfc" class="anchor" href="#specification-good-for-rfc" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specification (good for RFC)</h2>
 
 <ul>
 <li>Worker &lt;-&gt; Broker heartbeating.</li>
@@ -310,15 +349,15 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 <li>Broker SHALL force disconnect Worker if any error occurs.</li>
 </ul>
 
-<h3>
-<a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h3>
+<h2>
+<a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h2>
 
 <ul>
 <li>Add authentication support through <a href="https://github.com/msealand/zmq-zap.node">zmq-zap</a> ZeroMQ ZAP to trust Clients and Workers.</li>
 </ul>
 
-<h3>
-<a id="follow-me" class="anchor" href="#follow-me" aria-hidden="true"><span class="octicon octicon-link"></span></a>Follow me</h3>
+<h2>
+<a id="follow-me" class="anchor" href="#follow-me" aria-hidden="true"><span class="octicon octicon-link"></span></a>Follow me</h2>
 
 <ul>
 <li>Fincluster - cloud financial investments platform : <a href="https://fincluster.com">fincluster</a> /  <a href="https://twitter.com/fincluster">@fincluster</a>
@@ -327,8 +366,8 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 </li>
 </ul>
 
-<h3>
-<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h3>
+<h2>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h2>
 
 <ul>
 <li><a href="https://github.com/bmeck">bmeck</a></li>
