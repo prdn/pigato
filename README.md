@@ -69,7 +69,8 @@ More examples
 
 ## API
 
-### `pigato.Broker(addr)`
+### Worker
+#### `PIGATO.Broker(addr, conf)`
 * `addr` - Broker address (string, i.e: 'tcp://*:12345') 
 
 Simply starts up a broker.
@@ -83,15 +84,18 @@ broker.start(function() {
 });
 ```
 
-### `pigato.Worker(addr, serviceName, conf)`
+### Worker
+#### `PIGATO.Worker(addr, serviceName, conf)`
 * `addr` - Broker address (type=string, i.e: 'tcp://localhost:12345') 
 * `serviceName` - service implemented by the Worker (type=string, i.e: 'echo')
   * wildcards * are supported (i.e: 'ech*')
 * `conf` - configuration override (type=object, i.e { concurrency: 20 })
   * `concurrency` - sets max number of concurrent requests (type=int, -1 = no limit)
 
-Worker receives `"request"` events with 2 arguments:
+#### Methods
 
+##### `on`
+Worker receives `request` events with 2 arguments:
 * `data` - data sent from the Client (type=string/object/array).
 * `reply` - extended writable stream (type=object)
 
@@ -104,7 +108,8 @@ Worker receives `"request"` events with 2 arguments:
 * `active()` - returns the status of the Request (type=boolean). A Request becomes inactive when the Worker disconnects from the Broker or it has been discarded by the Client or the Client disconnects from the Broker. This is useful for long running tasks so the Worker can monitor whether or not continue processing a Request.
 * `ended` - tells if the Request has been ended (type=boolean).
 
-Example:
+**Example**
+
 ```
 var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
 worker.start();
@@ -144,14 +149,15 @@ worker.conf.concurrency = 2;
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
 
-### `PIGATO.Client(addrs)`
+### Client
+#### `PIGATO.Client(addrs)`
 * `addrs` - list of Broker addresses (array)
 * `conf`
   * `autostart`: automatically starts the Client (type=boolean, default=false) 
 
 #### Methods
 
-##### `start
+##### `start`
 
 Start the Client
 
