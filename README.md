@@ -170,6 +170,7 @@ Send a Request
 * `opts` - options for the Request (type=object)
   * `timeout`: timeout in milliseconds (type=number, default=60000, -1 for infinite timeout)
   * `retry`: if a Worker dies before replying, the Request is automatically requeued. (type=number, values=0|1, default=0)
+  * `nocache`: skip Broker's cache
 
 
 **Example**
