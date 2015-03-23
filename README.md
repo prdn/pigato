@@ -224,6 +224,10 @@ client.request('my-service', 'foo', function (err, data) {
 * Worker SHALL NOT send more W_REPLY (for a Request) after sending first W_REPLY message.
 * Broker SHALL force disconnect Worker if any error occurs.
 
+## Changelog
+#### v.0.0.30
+* Support for `opts.nocache` flag in `client.request` : Client requests a fresh uncached reply
+
 ## Roadmap
 * Add authentication support through [zmq-zap](https://github.com/msealand/zmq-zap.node) ZeroMQ ZAP to trust Clients and Workers.
 
