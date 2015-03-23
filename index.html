@@ -352,6 +352,31 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 </ul>
 
 <h2>
+<a id="protocol" class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Protocol</h2>
+
+<h4>
+<a id="client--worker-messages" class="anchor" href="#client--worker-messages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client / Worker messages</h4>
+
+<ul>
+<li>Frame 0: Side tag (MDP.CLIENT/MDP.WORKER)</li>
+<li>Frame 1: Message type (MDP.W_REQUEST, MDP.W_REPLY, ...)</li>
+<li>Frame 2: Service name</li>
+<li>Frame 3: Request ID (uuid)</li>
+<li>Frame 4: JSON encode request data</li>
+<li>Frame 5: JSON encode request options</li>
+</ul>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<h4>
+<a id="v0030" class="anchor" href="#v0030" aria-hidden="true"><span class="octicon octicon-link"></span></a>v.0.0.30</h4>
+
+<ul>
+<li>Support for <code>opts.nocache</code> flag in <code>client.request</code> : Client requests a fresh uncached reply</li>
+</ul>
+
+<h2>
 <a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h2>
 
 <ul>
