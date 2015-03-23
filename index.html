@@ -284,6 +284,8 @@ worker.on('request', function(data, reply) {
 <code>timeout</code>: timeout in milliseconds (type=number, default=60000, -1 for infinite timeout)</li>
 <li>
 <code>retry</code>: if a Worker dies before replying, the Request is automatically requeued. (type=number, values=0|1, default=0)</li>
+<li>
+<code>nocache</code>: skip Broker's cache</li>
 </ul>
 </li>
 </ul>
