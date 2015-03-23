@@ -381,7 +381,7 @@ describe('Wildcards', function () {
   })
 });
 
-describe('Resend after timout', function () {
+describe('Resend after timeout', function () {
   var bhost = location + uuid.v4();
 
   var broker = new PIGATO.Broker(bhost);
