@@ -4,7 +4,7 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-describe('BASE', function() {
+describe('STREAM SPECS', function() {
   var bhost = location + uuid.v4();
 
   var broker = new PIGATO.Broker(bhost)

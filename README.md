@@ -236,12 +236,7 @@ client.request('my-service', 'foo', function (err, data) {
 
 ## Changelog
 
-#### v.0.0.32
-* Minor fix in `client.requestStream`
-* Changelog and protocol specs
-
-#### v.0.0.31
-* Support for `opts.nocache` flag in `client.request` : Client requests a fresh uncached reply
+[CHANGELOG](CHANGELOG.md)
 
 ## Roadmap
 * Add authentication support through [zmq-zap](https://github.com/msealand/zmq-zap.node) ZeroMQ ZAP to trust Clients and Workers.
