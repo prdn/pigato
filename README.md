@@ -226,13 +226,20 @@ client.request('my-service', 'foo', function (err, data) {
 
 ## Protocol
 
-#### Client / Worker messages
+#### Common
 * Frame 0: Side tag (MDP.CLIENT/MDP.WORKER)
-* Frame 1: Message type (MDP.W_REQUEST, MDP.W_REPLY, ...)
+* Frame 1: Message type (MDP.W_REQUEST, MDP.W_REPLY, MDP.W_REPLY_REJECT, ...)
 * Frame 2: Service name
 * Frame 3: Request ID (uuid)
+
+#### Client request
 * Frame 4: JSON encode request data
 * Frame 5: JSON encode request options
+
+#### Worker reply
+* Frame 4: Numeric status (0=OK, -1=ERROR)
+* Frame 5: JSON encode request data / error
+* Frame 6: JSON encode request options
 
 ## Changelog
 
