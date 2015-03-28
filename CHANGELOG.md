@@ -1,5 +1,10 @@
 # PIGATO CHANGELOG
 
+### v.0.0.33
+* Minor fixes
+* Stress test for file descriptors
+* Changelog moved to its own file 
+
 ### v.0.0.32
 * Minor fix in `client.requestStream`
 * Changelog and protocol specs
