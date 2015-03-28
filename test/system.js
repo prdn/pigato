@@ -30,15 +30,19 @@ describe('FILE DESCRIPTORS', function() {
         c.stop();
         cnt++
       }
+      step();
     }
 
-    var itv = setInterval(function() {
-      if (cnt > 5000) {
-        clearInterval(itv);
-        done();
-        return;
-      }
-      spawn(zmq.Context.getMaxSockets() - 100);
-    }, 100);
+    function step() {
+      setImmediate(function() {
+        if (cnt > 5000) {
+          done();
+          return;
+        }
+        spawn(zmq.Context.getMaxSockets() - 100);
+      });
+    }
+
+    step();
   });
 });
