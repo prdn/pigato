@@ -11,5 +11,6 @@ worker.on('error', function(e) {
 });
 
 worker.on('request', function(inp, rep) {
+  rep.opts.cache = 10000;
   rep.end(inp);
 });
