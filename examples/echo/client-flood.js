@@ -11,7 +11,7 @@ client.on('error', function(e) {
 });
 
 var d1 = new Date();
-var reqs = 100000;
+var reqs = 10000;
 
 var rcnt = 0;
 
