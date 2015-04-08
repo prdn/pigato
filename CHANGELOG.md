@@ -1,5 +1,12 @@
 # PIGATO CHANGELOG
 
+### v.0.0.34 (dev)
+* Support for targeting a Client Request to a specific Worker using the Request option workerId
+* Minor Broker code refactoring
+* Refactored test directory structure
+* New test for file descriptors management 
+* Fixed Broker internal request-map memory leak
+
 ### v.0.0.33
 * Minor fixes
 * Stress test for file descriptors
@@ -11,5 +18,4 @@
 
 ### v.0.0.31
 * Support for `opts.nocache` flag in `client.request` : Client requests a fresh uncached reply
-
 
