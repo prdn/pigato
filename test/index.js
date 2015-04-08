@@ -17,7 +17,7 @@ describe('BASE', function() {
     }, 1000);
   });
 
-  it('Client partial/final request (stream)', function(done) {
+  it('Client partial/final Request (stream)', function(done) {
     var ns = uuid.v4();
     var chunk = 'foo';
 
@@ -52,7 +52,7 @@ describe('BASE', function() {
     }
   });
 
-  it('Client partial/final request (callback)', function(done) {
+  it('Client partial/final Request (callback)', function(done) {
     var ns = uuid.v4();
     var chunk = 'foo';
 
@@ -90,7 +90,7 @@ describe('BASE', function() {
     }
   });
 
-  it('JSON Client partial/final request (callback)', function(done) {
+  it('JSON Client partial/final Request (callback)', function(done) {
     var ns = uuid.v4();
     var chunk = { foo: 'bar' };
 
@@ -167,7 +167,7 @@ describe('BASE', function() {
     }
   });
 
-  it('Client request retry', function(done) {
+  it('Broker Request retry', function(done) {
     var ns = uuid.v4();
     this.timeout(25 * 1000);
 
@@ -322,7 +322,7 @@ describe('BASE', function() {
   });
 });
 
-describe('Wildcards', function () {
+describe('WILDCARDS', function () {
   var bhost = location + uuid.v4();
 
   var broker = new PIGATO.Broker(bhost);
@@ -335,7 +335,7 @@ describe('Wildcards', function () {
     }, 1000);
   });
 
-  it('test1', function (done) {
+  it('Base', function (done) {
     var ns = uuid.v4();
     this.timeout(5000);
 
@@ -381,7 +381,7 @@ describe('Wildcards', function () {
   })
 });
 
-describe('Resend after timeout', function () {
+describe('TIMEOUT', function () {
   var bhost = location + uuid.v4();
 
   var broker = new PIGATO.Broker(bhost);
@@ -394,7 +394,7 @@ describe('Resend after timeout', function () {
     }, 1000);
   });
 
-  it('Supports resending after worker dies', function (done) {
+  it('Resend Request on Worker death', function (done) {
     var ns = uuid.v4();
     this.timeout(15000);
 
@@ -416,7 +416,7 @@ describe('Resend after timeout', function () {
 
     var counter = 0;
     function request() {
-      client.request(ns, chunk, {timeout: 5000})
+      client.request(ns, chunk, { timeout: 5000 })
       .on('data', function (data) {
         chai.assert.equal(data, chunk + ':bar');
       })
@@ -450,11 +450,10 @@ describe('Resend after timeout', function () {
       worker.stop();
       done(err);
     }
-
   })
 });
 
-describe('Concurrency', function () {
+describe('CONCURRENCY', function () {
   var bhost = location + uuid.v4();
 
   var broker = new PIGATO.Broker(bhost);
@@ -465,11 +464,9 @@ describe('Concurrency', function () {
     done();
   });
 
-  it('20 concurrent requests', function(done) {
+  it('Base', function(done) {
     var ns = uuid.v4();
     var chunk = 'bar';
-
-    this.timeout(15000);
 
     var cc = 20;
 
