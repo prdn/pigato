@@ -4,7 +4,7 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-var DirectoryWorker = require('./../workers/directory');
+var DirectoryWorker = require('./../services/directory');
 
 describe('DIRECTORY', function () {
   var bhost = location + uuid.v4();
