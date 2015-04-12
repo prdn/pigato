@@ -12,10 +12,7 @@ describe('FILE DESCRIPTORS', function() {
   broker.start(function() {});
 
   after(function(done) {
-    broker.stop();
-    setTimeout(function() {
-      done();
-    }, 1000);
+    broker.stop(done);
   });
 
   it('Client flood', function(done) {

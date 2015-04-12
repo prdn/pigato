@@ -11,10 +11,7 @@ describe('BASE', function() {
   broker.start(function() {});
 
   after(function(done) {
-    broker.stop();
-    setTimeout(function() {
-      done();
-    }, 1000);
+    broker.stop(done);
   });
 
   it('Client partial/final Request (stream)', function(done) {

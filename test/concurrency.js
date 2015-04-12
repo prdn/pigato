@@ -11,8 +11,7 @@ describe('CONCURRENCY', function () {
   broker.start(function() {});
 
   after(function(done) {
-    broker.stop();
-    done();
+    broker.stop(done);
   });
 
   it('Base', function(done) {

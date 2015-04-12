@@ -4,17 +4,25 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-describe('TARGET', function () {
-  var bhost = location + uuid.v4();
+var DirectoryWorker = require('./../workers/directory');
 
+describe('DIRECTORY', function () {
+  var bhost = location + uuid.v4();
+   
   var broker = new PIGATO.Broker(bhost);
+  var dw = new DirectoryWorker(bhost, {
+    local: broker.conf.local                            
+  });
+  
   broker.start(function() {});
+  dw.start();
 
   after(function(done) {
+    dw.stop();
     broker.stop(done);
   });
 
-  it('Request for specific Worker', function (done) {
+  it('Base', function (done) {
     var ns = uuid.v4();
     this.timeout(5000);
 
@@ -33,34 +41,37 @@ describe('TARGET', function () {
     
     client.start();
 
-    var samples = 10;
+    var samples = 3;
 
     for (var wi = 0; wi < samples; wi++) {
       spawn();
     }
 
-    var rcnt = 0;
+    var workerIds = workers.map(function(wrk) {
+      return wrk.conf.name;
+    });
 
-    function request() {
-      var workerId = workers[Math.round(Math.random() * 1000 % 9)].conf.name;
-      client.request(ns, 'foo', { workerId: workerId })
+    workerIds.sort(function(a, b) {
+      return a < b ? -1 : 1;
+    });
+
+    setTimeout(function() {
+      client.request('$dir', ns)
       .on('data', function(data) {
-        chai.assert.equal(data, workerId);
+        chai.assert.isArray(data);
+        data.sort(function(a, b) {
+          return a < b ? -1 : 1;
+        });
+
+        chai.assert.deepEqual(data, workerIds);
       })
       .on('error', function (err) {
         stop(err);
       })
       .on('end', function() {
-        rcnt++;
-        if (rcnt === samples) {
-          stop();
-        }
+        stop();
       });
-    }
-
-    for (var i = 0; i < samples; i++) {
-      request();
-    }
+    }, 2000);
 
     function stop(err) {
       workers.forEach(function(worker) {
