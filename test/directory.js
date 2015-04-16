@@ -24,7 +24,6 @@ describe('DIRECTORY', function () {
 
   it('Base', function (done) {
     var ns = uuid.v4();
-    this.timeout(5000);
 
     var client = new PIGATO.Client(bhost);
 
@@ -71,7 +70,7 @@ describe('DIRECTORY', function () {
       .on('end', function() {
         stop();
       });
-    }, 2000);
+    }, 1);
 
     function stop(err) {
       workers.forEach(function(worker) {

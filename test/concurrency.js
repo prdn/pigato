@@ -35,7 +35,7 @@ describe('CONCURRENCY', function () {
         clearInterval(it);
 
         res.end(chunk);
-      }, 50);
+      }, 10);
     });
 
     worker.start();

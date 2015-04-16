@@ -174,10 +174,16 @@ describe('BASE', function() {
 
     function spawn(id) {
       var worker = new PIGATO.Worker(bhost, ns);
+
       worker.on('request', function(inp, res) {
-        setTimeout(function() {
+        if(id == 'w1'){
+          setTimeout( firstRequestDone , 10 );
+          setTimeout(function() {
+            res.end(chunk + '/' + id);
+        }, 2000);  
+        }else{
           res.end(chunk + '/' + id);
-        }, 2000);
+        }
       });
 
       worker.start();
@@ -199,10 +205,13 @@ describe('BASE', function() {
 
     spawn('w1');
 
-    setTimeout(function() {
+    var firstRequestDone = function(){
+          setTimeout(function() {
       spawn('w2');
       workers[0].stop();
-    }, 1000);
+    }, 10);
+    }
+
 
     function stop() {
       workers.forEach(function(worker) {
@@ -276,15 +285,14 @@ describe('BASE', function() {
 
   it('Client error timeout (stream)', function(done) {
     var ns = uuid.v4();
-    this.timeout(5000);
 
-    var client = new PIGATO.Client(bhost);
+    var client = new PIGATO.Client(bhost , { heartbeat : 25});
     client.start();
 
     client.request(
       ns, 'foo',
-      { timeout: 1000 }
-    ).on('error', function(err) {
+      { timeout: 60 }
+    ).on('error', function(err ) {
       chai.assert.equal(err, 'C_TIMEOUT');
       stop();
     });
@@ -297,9 +305,8 @@ describe('BASE', function() {
 
   it('Client error timeout (callback)', function(done) {
     var ns = uuid.v4();
-    this.timeout(5000);
 
-    var client = new PIGATO.Client(bhost);
+    var client = new PIGATO.Client(bhost, { heartbeat : 25});
     client.start();
 
     client.request(
@@ -309,7 +316,7 @@ describe('BASE', function() {
         chai.assert.equal(err, 'C_TIMEOUT');
         stop();
       },
-      { timeout: 1000 }
+      { timeout: 60 }
     );
 
     function stop() {
