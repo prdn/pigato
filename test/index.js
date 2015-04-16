@@ -122,7 +122,6 @@ describe('BASE', function() {
 
   it('Worker reject', function(done) {
     var ns = uuid.v4();
-    this.timeout(15 * 1000);
 
     var chunk = 'NOT_MY_JOB';
     var chunk_2 = 'DID_MY_JOB';
@@ -166,7 +165,6 @@ describe('BASE', function() {
 
   it('Broker Request retry', function(done) {
     var ns = uuid.v4();
-    this.timeout(25 * 1000);
 
     var chunk = 'foo';
 
@@ -176,19 +174,15 @@ describe('BASE', function() {
       var worker = new PIGATO.Worker(bhost, ns);
 
       worker.on('request', function(inp, res) {
-        if(id == 'w1'){
-          setTimeout( firstRequestDone , 10 );
-          setTimeout(function() {
-            res.end(chunk + '/' + id);
-        }, 2000);  
-        }else{
+        if (id == 'w1') {
+          firstRequestDone();
+        } else {
           res.end(chunk + '/' + id);
         }
       });
 
       worker.start();
       workers.push(worker);
-
       return worker;
     };
 
@@ -205,13 +199,12 @@ describe('BASE', function() {
 
     spawn('w1');
 
-    var firstRequestDone = function(){
-          setTimeout(function() {
-      spawn('w2');
-      workers[0].stop();
-    }, 10);
+    function firstRequestDone() {
+      setTimeout(function() {
+        spawn('w2');
+        workers[0].stop();
+      }, 10);
     }
-
 
     function stop() {
       workers.forEach(function(worker) {
@@ -237,9 +230,8 @@ describe('BASE', function() {
     var client = new PIGATO.Client(bhost);
     client.start();
 
-    client.request(
-      ns, chunk
-    ).on('error', function(err) {
+    client.request(ns, chunk)
+    .on('error', function(err) {
       chai.assert.equal(err, chunk);
       stop();
     });
@@ -289,10 +281,8 @@ describe('BASE', function() {
     var client = new PIGATO.Client(bhost , { heartbeat : 25});
     client.start();
 
-    client.request(
-      ns, 'foo',
-      { timeout: 60 }
-    ).on('error', function(err ) {
+    client.request(ns, 'foo', { timeout: 60 })
+    .on('error', function(err ) {
       chai.assert.equal(err, 'C_TIMEOUT');
       stop();
     });

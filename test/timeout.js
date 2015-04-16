@@ -38,14 +38,13 @@ describe('TIMEOUT', function() {
     });
 
     it('can be reached', function(done) {
-
       client.request(ns, chunk, {
-          timeout: 60
-        })
-        .on('data', function(data) {
-          chai.assert.equal(data, chunk + ':bar');
-        })
-        .on('end', done);
+        timeout: 60
+      })
+      .on('data', function(data) {
+        chai.assert.equal(data, chunk + ':bar');
+      })
+      .on('end', done);
 
     });
   });
@@ -60,13 +59,13 @@ describe('TIMEOUT', function() {
 
     it('client get a timeout', function(done) {
       client.request(ns, chunk, {
-          timeout: 50
-        })
-        .on('error', function(err) {
-          chai.assert.notEqual(null, err);
-          chai.assert.equal('C_TIMEOUT', err);
-          done();
-        });
+        timeout: 50
+      })
+      .on('error', function(err) {
+        chai.assert.notEqual(null, err);
+        chai.assert.equal('C_TIMEOUT', err);
+        done();
+      });
     });
   });
 
@@ -75,23 +74,23 @@ describe('TIMEOUT', function() {
 
     it('can reach the server and answer', function(done) {
 
-    var timeoutBeforeLaunch = 50;
+      var timeoutBeforeLaunch = 50;
       var startTime = +new Date();
       client.request(ns, chunk, {
-          timeout: 100
-        })
-        .on('data', function(data) {
-          chai.assert.equal(data, chunk + ':bar');
-        })
-        .on('error', function(err) {
-          assert.ok(!err, 'Should not be here');
-        })
-        .on('end', function(){
+        timeout: 100
+      })
+      .on('data', function(data) {
+        chai.assert.equal(data, chunk + ':bar');
+      })
+      .on('error', function(err) {
+        assert.ok(!err, 'Should not be here');
+      })
+      .on('end', function(){
 
         var endTime = +new Date();
         assert.ok( endTime - startTime > timeoutBeforeLaunch , 'response is to fast');
         done();
-        });
+      });
 
       setTimeout(function() {
         backupWorker.start();
@@ -107,15 +106,15 @@ describe('TIMEOUT', function() {
 
     it('can reach the server and answer', function(done) {
       client.request(ns, chunk, {
-          timeout: 60
-        })
-        .on('data', function(data) {
-          chai.assert.equal(data, chunk + ':bar');
-        })
-        .on('error', function(err) {
-          assert.ok(!err, 'Should not be here');
-        })
-        .on('end', done);
+        timeout: 60
+      })
+      .on('data', function(data) {
+        chai.assert.equal(data, chunk + ':bar');
+      })
+      .on('error', function(err) {
+        assert.ok(!err, 'Should not be here');
+      })
+      .on('end', done);
     });
   });
 });
