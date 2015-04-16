@@ -10,7 +10,7 @@ var location = 'inproc://#';
 describe('FILE DESCRIPTORS', function() {
   var bhost = location + uuid.v4();
 
-  var broker = new PIGATO.Broker(bhost)
+  var broker = new PIGATO.Broker(bhost);
   broker.start(function() {});
 
   after(function(done) {
