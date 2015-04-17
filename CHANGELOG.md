@@ -1,6 +1,7 @@
 # PIGATO CHANGELOG
 
 ### v.0.0.34 (dev)
+* Test suite refactoring for improved execution speed
 * Support for targeting a Client Request to a specific Worker using the Request option workerId
 * Minor Broker code refactoring
 * Broker dispatcher improvements
