@@ -4,21 +4,19 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-var DirectoryWorker = require('./../services/Directory');
-
 describe('DIRECTORY', function () {
   var bhost = location + uuid.v4();
    
   var broker = new PIGATO.Broker(bhost);
-  var dw = new DirectoryWorker(bhost, {
+  var ds = new PIGATO.services.Directory(bhost, {
     local: broker.conf.local                            
   });
   
-  broker.start(function() {});
-  dw.start();
+  broker.start();
+  ds.start();
 
   after(function(done) {
-    dw.stop();
+    ds.stop();
     broker.stop(done);
   });
 
