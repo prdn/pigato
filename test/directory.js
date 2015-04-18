@@ -9,7 +9,7 @@ describe('DIRECTORY', function () {
    
   var broker = new PIGATO.Broker(bhost);
   var ds = new PIGATO.services.Directory(bhost, {
-    local: broker.conf.local                            
+    intch: broker.conf.intch                            
   });
   
   broker.start();

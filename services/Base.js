@@ -14,7 +14,7 @@ Base.prototype.start = function() {
   this.sub = zmq.socket('sub');
   this.sub.identity = new Buffer(this.wrk.name + '/sub');
 
-  this.sub.connect(this.conf.local);
+  this.sub.connect(this.conf.intch);
 };
 
 Base.prototype.stop = function() {
