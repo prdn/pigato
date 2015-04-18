@@ -215,6 +215,34 @@ client.request('my-service', 'foo', function (err, data) {
 
 ```
 
+### Core Services
+Core services are a set of Services that interact with a Broker via a dedicated PUB/SUB channel to extend its core functionalities.
+
+#### Configuration
+var broker = new PIGATO.Broker(bhost);
+var csrv = new PIGATO.services.ExampleCoreService(bhost, {
+  intch: broker.conf.intch // internal pub/sub channel                  
+});
+broker.start();
+csrv.start();
+
+#### Directory `PIGATO.services.Directory`
+Directory service ($dir) replies to Requests with the list of available Workers for a selected service. 
+
+**Example**
+
+```
+// Broadcast a message to all Workers that offer 'echo' Service
+client.request(
+  '$dir', 'echo', undefined, 
+  function(err, workers) {
+    workers.forEach(function(wid) {
+      client.request('echo', 'foo', { workerId: wid });
+    });
+  }
+);
+```
+
 ### Notes
 * when using a `inproc` socket the broker *must* become active before any queued messages.
 
