@@ -226,7 +226,9 @@ var csrv = new PIGATO.services.ExampleCoreService(bhost, {
 broker.start();
 csrv.start();
 
-#### Directory `PIGATO.services.Directory`
+#### Directory
+##### `PIGATO.services.Directory`
+
 Directory service ($dir) replies to Requests with the list of available Workers for a selected service. 
 
 **Example**
