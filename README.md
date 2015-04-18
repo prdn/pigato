@@ -7,7 +7,7 @@ PIGATO
 
 PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework supporting multiple programming languages: Node.js/Io.js and Ruby.
 
-[![Travis Build Status](https://travis-ci.org/prdn/pigato.svg?style=flat)](https://travis-ci.org/maxto/pigato)
+[![Travis Build Status](https://travis-ci.org/prdn/pigato.svg?style=flat)](https://travis-ci.org/prdn/pigato)
 [![NPM version](http://img.shields.io/npm/v/pigato.svg?style=flat)](https://www.npmjs.com/package/pigato)
 
 **Supported Programming Languages**
