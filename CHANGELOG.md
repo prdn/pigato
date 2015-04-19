@@ -1,7 +1,8 @@
 # PIGATO CHANGELOG
 
-### v.0.0.35 (dev)
-* Better Core Services documentation
+### v.0.0.35 
+* Core Services exported
+* Core Services documentation
 
 ### v.0.0.34
 * Test suite refactoring for improved execution speed
