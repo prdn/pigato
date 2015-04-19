@@ -218,7 +218,7 @@ client.request('my-service', 'foo', function (err, data) {
 ### Core Services
 Core services are a set of Services that interact with a Broker via a dedicated PUB/SUB channel to extend its core functionalities.
 
-#### Configuration
+#### Initialization
 
 ```
 var broker = new PIGATO.Broker(bhost);
