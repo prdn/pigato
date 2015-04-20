@@ -37,6 +37,9 @@
 
 <p>PIGATO aims to offer an high-performance, reliable, scalable and extensible service-oriented framework supporting multiple programming languages: Node.js/Io.js and Ruby.</p>
 
+<p><a href="https://travis-ci.org/prdn/pigato"><img src="https://travis-ci.org/prdn/pigato.svg?style=flat" alt="Travis Build Status"></a>
+<a href="https://www.npmjs.com/package/pigato"><img src="http://img.shields.io/npm/v/pigato.svg?style=flat" alt="NPM version"></a></p>
+
 <p><strong>Supported Programming Languages</strong></p>
 
 <ul>
@@ -286,6 +289,8 @@ worker.on('request', function(data, reply) {
 <code>retry</code>: if a Worker dies before replying, the Request is automatically requeued. (type=number, values=0|1, default=0)</li>
 <li>
 <code>nocache</code>: skip Broker's cache</li>
+<li>
+<code>workerId</code>: ID of the Worker that must handle the Request (type=string)</li>
 </ul>
 </li>
 </ul>
@@ -332,6 +337,44 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 </code></pre>
 
 <h3>
+<a id="core-services" class="anchor" href="#core-services" aria-hidden="true"><span class="octicon octicon-link"></span></a>Core Services</h3>
+
+<p>Core services are a set of Services that interact with a Broker via a dedicated PUB/SUB channel to extend its core functionalities.</p>
+
+<h4>
+<a id="initialization" class="anchor" href="#initialization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initialization</h4>
+
+<pre><code>var broker = new PIGATO.Broker(bhost);
+var csrv = new PIGATO.services.ExampleCoreService(bhost, {
+  intch: broker.conf.intch // internal pub/sub channel                  
+});
+broker.start();
+csrv.start();
+</code></pre>
+
+<h4>
+<a id="directory" class="anchor" href="#directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directory</h4>
+
+<h5>
+<a id="pigatoservicesdirectory" class="anchor" href="#pigatoservicesdirectory" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.services.Directory</code>
+</h5>
+
+<p>Directory service ($dir) replies to Requests with the list of available Workers for a selected service. </p>
+
+<p><strong>Example</strong></p>
+
+<pre><code>// Broadcast a message to all Workers that offer 'echo' Service
+client.request(
+  '$dir', 'echo', undefined, 
+  function(err, workers) {
+    workers.forEach(function(wid) {
+      client.request('echo', 'foo', { workerId: wid });
+    });
+  }
+);
+</code></pre>
+
+<h3>
 <a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h3>
 
 <ul>
@@ -355,26 +398,36 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 <a id="protocol" class="anchor" href="#protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Protocol</h2>
 
 <h4>
-<a id="client--worker-messages" class="anchor" href="#client--worker-messages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client / Worker messages</h4>
+<a id="common" class="anchor" href="#common" aria-hidden="true"><span class="octicon octicon-link"></span></a>Common</h4>
 
 <ul>
 <li>Frame 0: Side tag (MDP.CLIENT/MDP.WORKER)</li>
-<li>Frame 1: Message type (MDP.W_REQUEST, MDP.W_REPLY, ...)</li>
+<li>Frame 1: Message type (MDP.W_REQUEST, MDP.W_REPLY, MDP.W_REPLY_REJECT, ...)</li>
 <li>Frame 2: Service name</li>
 <li>Frame 3: Request ID (uuid)</li>
+</ul>
+
+<h4>
+<a id="client-request" class="anchor" href="#client-request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client request</h4>
+
+<ul>
 <li>Frame 4: JSON encode request data</li>
 <li>Frame 5: JSON encode request options</li>
+</ul>
+
+<h4>
+<a id="worker-reply" class="anchor" href="#worker-reply" aria-hidden="true"><span class="octicon octicon-link"></span></a>Worker reply</h4>
+
+<ul>
+<li>Frame 4: Numeric status (0=OK, -1=ERROR)</li>
+<li>Frame 5: JSON encode request data / error</li>
+<li>Frame 6: JSON encode request options</li>
 </ul>
 
 <h2>
 <a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h2>
 
-<h4>
-<a id="v0030" class="anchor" href="#v0030" aria-hidden="true"><span class="octicon octicon-link"></span></a>v.0.0.30</h4>
-
-<ul>
-<li>Support for <code>opts.nocache</code> flag in <code>client.request</code> : Client requests a fresh uncached reply</li>
-</ul>
+<p><a href="CHANGELOG.md">CHANGELOG</a></p>
 
 <h2>
 <a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h2>
