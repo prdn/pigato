@@ -292,3 +292,4 @@ client.request(
 ## Contributors
 * [bmeck](https://github.com/bmeck)
 * [maxired](https://github.com/maxired)
+* [leonpegg](https://github.com/leonpegg)
