@@ -10,6 +10,8 @@ client.on('error', function(e) {
   console.log('ERROR', e);
 });
 
+return;
+
 // STREAM MODE 
 console.log("CLIENT SEND REQUEST (stream mode)");
 client.request(
