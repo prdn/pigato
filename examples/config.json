@@ -1,6 +1,5 @@
 {
   "broker": {
-    "host": "localhost",
-    "port": 55555
+    "host": "tcp://127.0.0.1:55555"
   }
 }
