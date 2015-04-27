@@ -4,23 +4,27 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-describe('DIRECTORY', function () {
-  var bhost = location + uuid.v4();
-   
-  var broker = new PIGATO.Broker(bhost);
-  var ds = new PIGATO.services.Directory(bhost, {
-    intch: broker.conf.intch                            
+var bhost = location + uuid.v4();
+
+var broker = new PIGATO.Broker(bhost);
+var ds;
+describe('DIRECTORY', function() {
+
+  before(function(done) {
+    broker.start(function() {
+      ds = new PIGATO.services.Directory(bhost, {
+        intch: broker.conf.intch
+      });
+      ds.start(done);
+    });
   });
-  
-  broker.start();
-  ds.start();
 
   after(function(done) {
     ds.stop();
     broker.stop(done);
   });
 
-  it('Base', function (done) {
+  it('Base', function(done) {
     var ns = uuid.v4();
 
     var client = new PIGATO.Client(bhost);
@@ -35,7 +39,7 @@ describe('DIRECTORY', function () {
       worker.start();
       workers.push(worker);
     };
-    
+
     client.start();
 
     var samples = 3;
@@ -54,20 +58,20 @@ describe('DIRECTORY', function () {
 
     setTimeout(function() {
       client.request('$dir', ns)
-      .on('data', function(data) {
-        chai.assert.isArray(data);
-        data.sort(function(a, b) {
-          return a < b ? -1 : 1;
-        });
+        .on('data', function(data) {
+          chai.assert.isArray(data);
+          data.sort(function(a, b) {
+            return a < b ? -1 : 1;
+          });
 
-        chai.assert.deepEqual(data, workerIds);
-      })
-      .on('error', function (err) {
-        stop(err);
-      })
-      .on('end', function() {
-        stop();
-      });
+          chai.assert.deepEqual(data, workerIds);
+        })
+        .on('error', function(err) {
+          stop(err);
+        })
+        .on('end', function() {
+          stop();
+        });
     }, 1);
 
     function stop(err) {

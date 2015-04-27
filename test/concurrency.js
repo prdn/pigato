@@ -4,12 +4,16 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
+var bhost = location + uuid.v4();
+var broker = new PIGATO.Broker(bhost);
+
+
 describe('CONCURRENCY', function () {
-  var bhost = location + uuid.v4();
 
-  var broker = new PIGATO.Broker(bhost);
-  broker.start(function() {});
-
+  before(function(done){
+    broker.start( done) ;  
+  })
+  
   after(function(done) {
     broker.stop(done);
   });

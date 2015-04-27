@@ -7,11 +7,14 @@ var assert = chai.assert;
 
 var location = 'inproc://#';
 
-describe('FILE DESCRIPTORS', function() {
-  var bhost = location + uuid.v4();
+var bhost = location + uuid.v4();
 
-  var broker = new PIGATO.Broker(bhost);
-  broker.start(function() {});
+var broker = new PIGATO.Broker(bhost);
+
+describe('FILE DESCRIPTORS', function() {
+  before(function() {
+    broker.start(function() {});
+  });
 
   after(function(done) {
     broker.stop(done);

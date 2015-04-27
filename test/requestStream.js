@@ -4,11 +4,15 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-describe('STREAM SPECS', function() {
-  var bhost = location + uuid.v4();
+var bhost = location + uuid.v4();
+var broker = new PIGATO.Broker(bhost);
 
-  var broker = new PIGATO.Broker(bhost)
-  broker.start(function() {});
+describe('STREAM SPECS', function() {
+
+  before(function(done) {
+    broker.start(done);
+  })
+
 
   after(function(done) {
     broker.stop(done);
