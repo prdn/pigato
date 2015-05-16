@@ -155,7 +155,9 @@ Take note: due to the framing protocol of `zmq` only the data supplied to `respo
 #### `PIGATO.Client(addrs)`
 * `addrs` - list of Broker addresses (array)
 * `conf`
-  * `autostart`: automatically starts the Client (type=boolean, default=false) 
+  * `autostart`: automatically starts the Client (type=boolean, default=false)
+  * `onConnect`: function to be called when the Client connects to the Broker
+  * `onDisconnnect`: function to be called when the Client disconnects from the Broker
 
 #### Methods
 
@@ -214,6 +216,12 @@ client.request('my-service', 'foo', function (err, data) {
 }, { timeout: 30000 });
 
 ```
+
+#### Events
+* `start` : on Client start
+* `stop` : on Client stop
+* `connect` : on Client connect
+* `disconnect` : on Client disconnect
 
 ### Core Services
 Core services are a set of Services that interact with a Broker via a dedicated PUB/SUB channel to extend its core functionalities.
