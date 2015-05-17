@@ -93,6 +93,8 @@ broker.start(function() {
   * wildcards * are supported (i.e: 'ech*')
 * `conf` - configuration override (type=object, i.e { concurrency: 20 })
   * `concurrency` - sets max number of concurrent requests (type=int, -1 = no limit)
+  * `onConnect`: function to be called when the Worker connects to the Broker
+  * `onDisconnnect`: function to be called when the Worker disconnects from the Broker
 
 #### Methods
 
@@ -150,6 +152,13 @@ worker.conf.concurrency = 2;
 ```
 
 Take note: due to the framing protocol of `zmq` only the data supplied to `response.end(data)` will be given to the client's final callback.
+
+#### Events
+* `start` : on Worker start
+* `stop` : on Worker stop
+* `connect` : on Worker connect
+* `disconnect` : on Worker disconnect
+
 
 ### Client
 #### `PIGATO.Client(addrs)`
