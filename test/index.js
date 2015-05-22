@@ -4,14 +4,21 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
+var bhost = location + uuid.v4();
+
+var broker = new PIGATO.Broker(bhost)
+
+
 describe('BASE', function() {
-  var bhost = location + uuid.v4();
 
-  var broker = new PIGATO.Broker(bhost)
-  broker.start(function() {});
-
+  before(function(done) {
+    broker.conf.onStart = done;
+    broker.start();
+  });
+  
   after(function(done) {
-    broker.stop(done);
+    broker.conf.onStop = done;
+    broker.stop();
   });
 
   it('Client partial/final Request (stream)', function(done) {
@@ -89,7 +96,9 @@ describe('BASE', function() {
 
   it('JSON Client partial/final Request (callback)', function(done) {
     var ns = uuid.v4();
-    var chunk = { foo: 'bar' };
+    var chunk = {
+      foo: 'bar'
+    };
 
     var worker = new PIGATO.Worker(bhost, ns);
 
@@ -190,7 +199,9 @@ describe('BASE', function() {
     client.start();
 
     client.request(
-      ns, chunk, { retry: 1 }
+      ns, chunk, {
+        retry: 1
+      }
     ).on('data', function(data) {
       chai.assert.equal(data, chunk + '/w2');
     }).on('end', function() {
@@ -231,10 +242,10 @@ describe('BASE', function() {
     client.start();
 
     client.request(ns, chunk)
-    .on('error', function(err) {
-      chai.assert.equal(err, chunk);
-      stop();
-    });
+      .on('error', function(err) {
+        chai.assert.equal(err, chunk);
+        stop();
+      });
 
     function stop() {
       worker.stop();
@@ -278,14 +289,18 @@ describe('BASE', function() {
   it('Client error timeout (stream)', function(done) {
     var ns = uuid.v4();
 
-    var client = new PIGATO.Client(bhost , { heartbeat : 25});
+    var client = new PIGATO.Client(bhost, {
+      heartbeat: 25
+    });
     client.start();
 
-    client.request(ns, 'foo', { timeout: 60 })
-    .on('error', function(err ) {
-      chai.assert.equal(err, 'C_TIMEOUT');
-      stop();
-    });
+    client.request(ns, 'foo', {
+        timeout: 60
+      })
+      .on('error', function(err) {
+        chai.assert.equal(err, 'C_TIMEOUT');
+        stop();
+      });
 
     function stop() {
       client.stop();
@@ -296,7 +311,9 @@ describe('BASE', function() {
   it('Client error timeout (callback)', function(done) {
     var ns = uuid.v4();
 
-    var client = new PIGATO.Client(bhost, { heartbeat : 25});
+    var client = new PIGATO.Client(bhost, {
+      heartbeat: 25
+    });
     client.start();
 
     client.request(
@@ -305,8 +322,9 @@ describe('BASE', function() {
       function(err, data) {
         chai.assert.equal(err, 'C_TIMEOUT');
         stop();
-      },
-      { timeout: 60 }
+      }, {
+        timeout: 60
+      }
     );
 
     function stop() {

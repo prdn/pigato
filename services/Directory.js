@@ -30,13 +30,16 @@ Directory.prototype.start = function() {
   });
   
   this.sub.subscribe(this.service);
+  this.onStart();
 };
 
 Directory.prototype.stop = function() {
   if (this.sub) {
     this.sub.unsubscribe(this.service);
   }
+
   Base.prototype.stop.call(this);
+  this.onStop();
 };
 
 module.exports = Directory;

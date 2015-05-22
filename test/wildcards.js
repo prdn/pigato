@@ -4,14 +4,20 @@ var uuid = require('node-uuid');
 
 var location = 'inproc://#';
 
-describe('WILDCARDS', function () {
-  var bhost = location + uuid.v4();
+var bhost = location + uuid.v4();
+var broker = new PIGATO.Broker(bhost);
+   
 
-  var broker = new PIGATO.Broker(bhost);
-  broker.start(function() {});
+describe('WILDCARDS', function () {
+
+  before(function(done) {
+    broker.conf.onStart = done;
+    broker.start();
+  });
 
   after(function(done) {
-    broker.stop(done);
+    broker.conf.onStop = done;
+    broker.stop();
   });
 
   it('Base', function (done) {

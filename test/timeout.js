@@ -20,11 +20,13 @@ describe('TIMEOUT', function() {
 
   before(function(done) {
     client.start();
-    broker.start(done);
+    broker.conf.onStart = done;
+    broker.start();
   });
 
   after(function(done) {
-    broker.stop(done);
+    broker.conf.onStop = done;
+    broker.stop();
   });
 
   describe('When a server is launched', function(done) {

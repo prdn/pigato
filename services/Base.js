@@ -12,9 +12,15 @@ Base.prototype.start = function() {
   this.wrk.start();
 
   this.sub = zmq.socket('sub');
-  this.sub.identity = new Buffer(this.wrk.name + '/sub');
+  this.sub.identity = this.wrk.name + '/sub';
 
   this.sub.connect(this.conf.intch);
+};
+
+Base.prototype.onStart = function() {
+  if (this.conf.onStart) {
+    this.conf.onStart();
+  }
 };
 
 Base.prototype.stop = function() {
@@ -26,6 +32,12 @@ Base.prototype.stop = function() {
   if (this.sub) {
     this.sub.close();
     delete this.sub;
+  }
+};
+
+Base.prototype.onStop = function() {
+  if (this.conf.onStop) {
+    this.conf.onStop();
   }
 };
 
