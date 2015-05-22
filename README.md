@@ -74,6 +74,9 @@ More examples
 ### Broker
 #### `PIGATO.Broker(addr, conf)`
 * `addr` - Broker address (string, i.e: 'tcp://*:12345') 
+* `conf` - configuration override (type=object, i.e { concurrency: 20 })
+  * `onStart`: function to be called when the Broker start 
+  * `onStop`: function to be called when the Broker stop
 
 Simply starts up a broker.
 
@@ -85,6 +88,10 @@ broker.start(function() {
   console.log("Broker started");
 });
 ```
+
+#### Events
+* `start` : on Client start
+* `stop` : on Client stop
 
 ### Worker
 #### `PIGATO.Worker(addr, serviceName, conf)`
