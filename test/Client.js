@@ -128,8 +128,7 @@ describe('Client', function() {
     client.start();
   });
 
-
-
+    
   it('doesn\'t call callback if answer with bad id', function(done) {
 
     var called = false;
@@ -298,7 +297,7 @@ describe('Client', function() {
   });
 
 
-  it('nothing append on client if we send a reply to an unknown request', function(done) {
+  it('emit an error if unknown request', function(done) {
 
     var clientError = false;
 
@@ -317,7 +316,7 @@ describe('Client', function() {
       mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY, '', 'MYUNKNOWREQUEST', null, JSON.stringify("bar")]);
 
       setTimeout(function() {
-        assert.equal(false, clientError);
+        assert.equal(true, clientError);
         done();
       }, 20);
     });
