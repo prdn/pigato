@@ -6,7 +6,7 @@
     <title>Pigato by prdn</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -129,6 +129,16 @@ node examples/echo/client
 <ul>
 <li>
 <code>addr</code> - Broker address (string, i.e: 'tcp://*:12345') </li>
+<li>
+<code>conf</code> - configuration override (type=object, i.e { concurrency: 20 })
+
+<ul>
+<li>
+<code>onStart</code>: function to be called when the Broker start </li>
+<li>
+<code>onStop</code>: function to be called when the Broker stop</li>
+</ul>
+</li>
 </ul>
 
 <p>Simply starts up a broker.</p>
@@ -140,6 +150,16 @@ broker.start(function() {
   console.log("Broker started");
 });
 </code></pre>
+
+<h4>
+<a id="events" class="anchor" href="#events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h4>
+
+<ul>
+<li>
+<code>start</code> : on Client start</li>
+<li>
+<code>stop</code> : on Client stop</li>
+</ul>
 
 <h3>
 <a id="worker" class="anchor" href="#worker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Worker</h3>
@@ -164,6 +184,10 @@ broker.start(function() {
 <ul>
 <li>
 <code>concurrency</code> - sets max number of concurrent requests (type=int, -1 = no limit)</li>
+<li>
+<code>onConnect</code>: function to be called when the Worker connects to the Broker</li>
+<li>
+<code>onDisconnnect</code>: function to be called when the Worker disconnects from the Broker</li>
 </ul>
 </li>
 </ul>
@@ -239,6 +263,20 @@ worker.on('request', function(data, reply) {
 
 <p>Take note: due to the framing protocol of <code>zmq</code> only the data supplied to <code>response.end(data)</code> will be given to the client's final callback.</p>
 
+<h4>
+<a id="events-1" class="anchor" href="#events-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h4>
+
+<ul>
+<li>
+<code>start</code> : on Worker start</li>
+<li>
+<code>stop</code> : on Worker stop</li>
+<li>
+<code>connect</code> : on Worker connect</li>
+<li>
+<code>disconnect</code> : on Worker disconnect</li>
+</ul>
+
 <h3>
 <a id="client" class="anchor" href="#client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client</h3>
 
@@ -254,7 +292,11 @@ worker.on('request', function(data, reply) {
 
 <ul>
 <li>
-<code>autostart</code>: automatically starts the Client (type=boolean, default=false) </li>
+<code>autostart</code>: automatically starts the Client (type=boolean, default=false)</li>
+<li>
+<code>onConnect</code>: function to be called when the Client connects to the Broker</li>
+<li>
+<code>onDisconnnect</code>: function to be called when the Client disconnects from the Broker</li>
 </ul>
 </li>
 </ul>
@@ -335,6 +377,20 @@ client.request('my-service', 'foo', { timeout: 120000 }).pipe(process.stdout);
 }, { timeout: 30000 });
 
 </code></pre>
+
+<h4>
+<a id="events-2" class="anchor" href="#events-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h4>
+
+<ul>
+<li>
+<code>start</code> : on Client start</li>
+<li>
+<code>stop</code> : on Client stop</li>
+<li>
+<code>connect</code> : on Client connect</li>
+<li>
+<code>disconnect</code> : on Client disconnect</li>
+</ul>
 
 <h3>
 <a id="core-services" class="anchor" href="#core-services" aria-hidden="true"><span class="octicon octicon-link"></span></a>Core Services</h3>
@@ -452,6 +508,7 @@ client.request(
 <ul>
 <li><a href="https://github.com/bmeck">bmeck</a></li>
 <li><a href="https://github.com/maxired">maxired</a></li>
+<li><a href="https://github.com/leonpegg">leonpegg</a></li>
 </ul>
       </section>
       <footer>
