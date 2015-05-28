@@ -297,12 +297,36 @@ describe('Client', function() {
   });
 
 
-  it('emit an error if unknown request', function(done) {
-
-    var clientError = false;
+  it('emit an error if ERR_MSG_LENGTH we send a message to short', function(done) {
 
     client.on('error', function(err) {
-      clientError = true;
+      assert.ok(err);
+      assert.equal(err, 'ERR_MSG_LENGTH');
+      done();
+    });
+
+
+    mockBroker.on('message', function(id, clazz, type, topic, rid, data, opts) {
+      if (type.toString() == MDP.W_HEARTBEAT) {
+        mockBroker.send([id, clazz, MDP.W_HEARTBEAT]);
+        return;
+      }
+    });
+    client.on('connect', function() {
+      mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY ]);
+
+    });
+    client.start();
+  });
+
+
+  it('emit an ERR_REQ_INVALID error if we send a reply to an invalid request', function(done) {
+
+    client.on('error', function(err) {
+      assert.ok(err)
+      assert.equal(err, 'ERR_REQ_INVALID');
+      done();
+    
     });
 
 
@@ -315,10 +339,6 @@ describe('Client', function() {
     client.on('connect', function() {
       mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY, '', 'MYUNKNOWREQUEST', null, JSON.stringify("bar")]);
 
-      setTimeout(function() {
-        assert.equal(true, clientError);
-        done();
-      }, 20);
     });
     client.start();
   });
