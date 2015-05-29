@@ -37,7 +37,7 @@ describe('FILE DESCRIPTORS', function() {
     callback(null, clients);
   };
 
-  describe("When I create too many sockets", function() {
+/*  describe("When I create too many sockets", function() {
     it('return a \'Too many open files\' error', function(done) {
       spawn(zmq.Context.getMaxSockets() * 2, function(err, clients) {
 
@@ -47,18 +47,16 @@ describe('FILE DESCRIPTORS', function() {
         clients.forEach(function(client) {
           client.stop();
         });
-
-        setTimeout(done, 50);
+        setTimeout(done, 100);
       });
     });
-  });
+  });*/
 
 
   describe("When I create lots of sockets", function() {
 
     before(function(done) {
-      //lets wait a bit
-      setTimeout(done, 50);
+      setTimeout(done, 100);
     });
 
     it("still works if I close them in the meantime", function(done) {

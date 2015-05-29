@@ -487,7 +487,6 @@ describe('Client', function() {
     })
 
     it('send heartbeat regularly', function(done) {
-
       var called = false;
       var cbCalled = false;
       var heartbeatCount = 0;
@@ -501,7 +500,6 @@ describe('Client', function() {
       });
 
       client.on('connect', function() {
-
         assert.equal(1, heartbeatCount);
 
         setTimeout(function() {

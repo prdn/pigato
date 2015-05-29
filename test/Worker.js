@@ -587,8 +587,6 @@ describe('Worker Disconnection', function() {
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, b.toString());
         assert.equal(types[typesIndex], c.toString());
-        called = true;
-
       });
 
       worker.start();
@@ -607,19 +605,16 @@ describe('Worker Disconnection', function() {
         if (typesIndex >= types.length) {
           return;
         }
+
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, b.toString());
         assert.equal(types[typesIndex], c.toString());
-        called = true;
-
       });
 
       worker.on('disconnect', function() {
-        worker.removeAllListeners('disconnect');
         assert(typesIndex, 2);
+        worker.removeAllListeners('disconnect');
         done();
-
-
       })
 
       worker.start();
