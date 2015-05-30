@@ -81,19 +81,18 @@ describe('Client', function() {
       assert.equal(client.conf.name, a.toString());
       assert.equal(MDP.CLIENT, b.toString());
       assert.equal(MDP.W_HEARTBEAT, c.toString());
-
       called = true;
     });
 
     client.on('connect', function() {
       cbCalled = true;
     });
+
     client.start();
 
     setTimeout(function() {
       assert.equal(true, called);
       assert.equal(false, cbCalled);
-      clientOpts
       done();
     }, 20);
   });
@@ -213,9 +212,7 @@ describe('Client', function() {
       client.request('foo', 'bar').on('data', function(data) {
         assert.equal(data, toAnswer);
       }).on('end', function(err, data) {
-        clientOpts
         done();
-        clientOpts
       })
     });
     client.start();

@@ -46,7 +46,6 @@ describe('StartStop', function() {
       worker.start();
     });
 
-
     it('call the callback on stop', function(done) {
       worker.conf.onDisconnect = done;
       worker.stop();
@@ -82,7 +81,6 @@ describe('StartStop', function() {
       client.conf.onConnect = done;
       client.start();
     });
-
 
     it('call the callback on stop', function(done) {
       client.conf.onDisconnect = done;

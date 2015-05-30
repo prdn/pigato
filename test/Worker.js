@@ -318,7 +318,6 @@ describe('Worker', function() {
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
 
-
     it('string data are correctly sended', function(done) {
       var rid = Math.random();
       toCheck = function(a, side, type, clientId, service, requestId, status, data) {
@@ -576,9 +575,9 @@ describe('Worker Disconnection', function() {
     });
 
 
-    it('emit Disconnect when detecting it, before sending it', function(done) {
+    it('emit Disconnect when detecting it, after sending it', function(done) {
 
-      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT];
+      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_DISCONNECT];
       var typesIndex = -1;
 
       mockBroker.on('message', function(a, b, c) {
@@ -594,7 +593,7 @@ describe('Worker Disconnection', function() {
       });
 
       worker.on('disconnect', function() {
-        assert(typesIndex, 2);
+        assert(typesIndex, 3);
         worker.removeAllListeners('disconnect');
         done();
       })
