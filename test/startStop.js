@@ -137,34 +137,3 @@ describe('StartStop', function() {
     });
   });
 });
-/*broker.start(function() {
-  console.log("started");
-  worker.start(function() {
-    console.log("worker started");
-    client.start(function() {
-      console.log("client started");
-
-      worker.on('request', function(res, reply) {
-        reply.end('KKKK');
-      });
-
-
-      client.request("foo", "bar", function(err, data) {
-        console.log("client requestes", err, data);
-      }, function(err, data) {
-        console.log("client requestes end", err, data);
-
-        worker.stop(function() {
-          console.log("worker stopped");
-          client.stop(function() {
-            console.log("client stopped");
-            broker.stop(function(){
-              console.log("broker stopped, will exit");
-            })
-          });
-        })
-      });
-    });
-  });
-});
-*/

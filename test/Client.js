@@ -386,14 +386,11 @@ describe('Client', function() {
 
     before(function() {
       clientOpts = {
-        heartbeat: 5
+        heartbeat: 20
       };
     })
 
     it('emit an error when timeout exceeded', function(done) {
-
-      var called = false;
-      var cbCalled = false;
 
       mockBroker.on('message', function(id, clazz, type, topic, rid) {
         if (type.toString() == MDP.W_HEARTBEAT) {
@@ -410,9 +407,8 @@ describe('Client', function() {
           assert.equal(data, undefined);
           assert.equal('C_TIMEOUT', err);
           done();
-
         }, {
-          timeout: 10
+          timeout: 40
         });
       });
       client.start();
@@ -434,7 +430,6 @@ describe('Client', function() {
 
     it('wait for the heartbeat to expire before the error is returned', function(done) {
 
-      var called = false;
       var cbCalled = false;
 
       mockBroker.on('message', function(id, clazz, type, topic, rid) {
@@ -464,12 +459,10 @@ describe('Client', function() {
         assert.equal(false, cbCalled);
       }, 30);
 
-
       setTimeout(function() {
         assert.equal(true, cbCalled);
         done();
       }, 60);
-
     });
 
     after(function() {
@@ -482,13 +475,12 @@ describe('Client', function() {
 
     before(function() {
       clientOpts = {
-        heartbeat: 10
+        heartbeat: 25
       };
     })
 
     it('send heartbeat regularly', function(done) {
-      var called = false;
-      var cbCalled = false;
+
       var heartbeatCount = 0;
 
       mockBroker.on('message', function(id, clazz, type, topic, rid) {
@@ -505,7 +497,7 @@ describe('Client', function() {
         setTimeout(function() {
           assert.equal(3, heartbeatCount);
           done();
-        }, 25);
+        }, 60);
       });
 
       client.start();
@@ -519,10 +511,7 @@ describe('Client', function() {
 
   it('can send heartbeat from a request, and it will send the good requestId', function(done) {
 
-    var called = false;
-    var cbCalled = false;
     var heartbeatCount = 0;
-
     var requestId;
 
     mockBroker.on('message', function(id, clazz, type, topic, rid) {
@@ -561,9 +550,6 @@ describe('Client', function() {
 
   it('can send manual heartbeat for an unknown request', function(done) {
 
-    var called = false;
-    var cbCalled = false;
-
     var heartbeatCount = 0;
     var heartbeatContent = ['ONE', 'TWO', 'THREE', 'THREE'];
 
@@ -593,6 +579,7 @@ describe('Client', function() {
       client.heartbeat(heartbeatContent[2]);
       client.heartbeat(heartbeatContent[3]);
     });
+
     client.start();
   });
 
