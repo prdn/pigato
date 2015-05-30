@@ -38,10 +38,9 @@ describe('Worker', function() {
   it('connect to a zmq endpoint and call callback once ready made round trip', function(done) {
 
     var called = false;
-
     var types = [MDP.W_READY, MDP.W_DISCONNECT];
-
     var typesIndex = 0;
+    
     mockBroker.on('message', function(a, b, c) {
       assert.equal(worker.conf.name, a.toString());
       assert.equal(MDP.WORKER, b.toString());
@@ -66,10 +65,9 @@ describe('Worker', function() {
   it('connect to a zmq endpoint and emit \'connect\' once ready made round trip', function(done) {
 
     var called = false;
-
     var types = [MDP.W_READY, MDP.W_DISCONNECT];
-
     var typesIndex = 0;
+    
     mockBroker.on('message', function(a, b, c) {
       assert.equal(worker.conf.name, a.toString());
       assert.equal(MDP.WORKER, b.toString());
@@ -83,6 +81,7 @@ describe('Worker', function() {
       assert.equal(true, called);
       done();
     });
+
     worker.start();
   });
 
@@ -96,14 +95,15 @@ describe('Worker', function() {
         done();
       }, 20);
     });
+
     worker.start();
+    
     mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST]);
 
     worker.socket.on('message', function(a, b, c) {
       assert.equal(MDP.W_REQUEST, b.toString())
       countMessage++
     });
-
   });
 
   describe('emit hearbeat regularly', function() {
@@ -165,7 +165,6 @@ describe('Worker', function() {
     worker.start();
 
     mockBroker.send([worker.conf.name, MDP.CLIENT, MDP.W_REQUEST]);
-
   });
 
 
@@ -179,8 +178,7 @@ describe('Worker', function() {
     worker.start();
 
     mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST]);
-
-  })
+  });
 
   it('emit request events with no data when receiving a request with a JSON String', function(done) {
 
@@ -192,8 +190,7 @@ describe('Worker', function() {
     worker.start();
 
     mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', workerTopic, '', 'requestId', '"foo"']);
-
-  })
+  });
 
   it('emit request events with no data when receiving a request with an empty JSON object', function(done) {
 
@@ -206,8 +203,7 @@ describe('Worker', function() {
     worker.start();
 
     mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId', JSON.stringify({})]);
-
-  })
+  });
 
   it('emit request events with no data when receiving a request with an complexe JSON object', function(done) {
 
@@ -233,16 +229,15 @@ describe('Worker', function() {
         foo: 'baz'
       }
     })]);
-
   });
 
 
   it('messages sended to another worker is not received/handled', function(done) {
 
     var received = false;
+    
     worker.on('request', function(data, reply) {
       received = true
-
     });
 
     worker.start();
@@ -252,11 +247,8 @@ describe('Worker', function() {
     setTimeout(function() {
       assert.equal(received, false);
       done();
-
     }, 25);
-
   });
-
 
 
   describe('For an request exchange', function() {
@@ -266,6 +258,7 @@ describe('Worker', function() {
       worker.on('request', function(data, reply) {
         reply.end(toAnswer);
       });
+    
       mockBroker.on('message', function(a, side, type, service, empty, rid, status, data) {
         if (MDP.WORKER == side.toString() && type.toString() == MDP.W_REPLY) {
           assert.ok(toCheck);
@@ -274,7 +267,6 @@ describe('Worker', function() {
       });
 
       worker.start();
-
     });
 
     it('response keep the same clientId', function(done) {
@@ -327,7 +319,7 @@ describe('Worker', function() {
     });
 
 
-    it('String data are correctly sended', function(done) {
+    it('string data are correctly sended', function(done) {
       var rid = Math.random();
       toCheck = function(a, side, type, clientId, service, requestId, status, data) {
         assert.ok(data);
@@ -338,11 +330,13 @@ describe('Worker', function() {
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
 
-    it('Object data are correctly sended', function(done) {
+    it('object data are correctly sended', function(done) {
+      
       toAnswer = {
         foo: 'bar',
         toto: 42
       };
+
       var rid = Math.random();
       toCheck = function(a, side, type, clientId, service, requestId, status, data) {
         assert.ok(data);
@@ -355,10 +349,9 @@ describe('Worker', function() {
         assert.equal(parsed.toto, 42);
         done()
       };
+  
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
-
-
   });
 
 
@@ -375,6 +368,7 @@ describe('Worker', function() {
     it('send the defined concurrency in the hearbeat message', function(done) {
 
       var finished = false;
+
       mockBroker.on('message', function(a, b, c, empty, data) {
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, b.toString());
@@ -395,12 +389,12 @@ describe('Worker', function() {
       });
 
       worker.start();
-
     });
 
     it('is not impacted by the current requests', function(done) {
 
       var heartbeatCount = 0;
+
       mockBroker.on('message', function(a, b, c, empty, data) {
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, b.toString());
@@ -416,10 +410,10 @@ describe('Worker', function() {
           assert.ok(parsedConf);
           assert.equal(parsedConf.concurrency, workerOpts.concurrency);
           heartbeatCount++;
+        
           if (heartbeatCount == 3) {
             done();
           }
-
         }
       });
 
@@ -427,14 +421,12 @@ describe('Worker', function() {
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
-
     });
 
   });
 
 
   describe('when I send more request in // than conf.concurency', function() {
-
 
     before(function() {
       workerOpts = {
@@ -454,7 +446,6 @@ describe('Worker', function() {
           //we answer in reversed order to 3 first request
           reply.end(toAnswer);
         }, 30 - requestIndex * 10);
-
       });
 
       mockBroker.on('message', function(a, side, type, service, empty, rid, status, data) {
@@ -494,7 +485,6 @@ describe('Worker', function() {
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '1']);
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '2']);
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '3']);
-
     });
 
   });
@@ -511,26 +501,21 @@ describe('Worker Disconnection', function() {
     worker = new PIGATO.Worker(bhost, workerTopic, workerOpts);
     mockBroker = zmq.socket('router');
     mockBroker.bindSync(bhost);
-  })
-
+  });
 
   afterEach(function(done) {
-
     mockBroker.unbind(bhost);
     mockBroker.removeAllListeners('message');
-
     done();
-  })
+  });
 
-
+  
   describe('when stop is called when connected', function() {
     it('send Disconnect', function(done) {
 
-      var called = false;
-
       var types = [MDP.W_READY, MDP.W_DISCONNECT];
-
       var typesIndex = 0;
+      
       mockBroker.on('message', function(a, b, c) {
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, b.toString());
@@ -541,20 +526,17 @@ describe('Worker Disconnection', function() {
           done();
           return;
         }
+
         setTimeout(function() {
           mockBroker.send([a, b, c]);
         }, 10);
-
-        called = true;
       });
-
 
       worker.on('connect', function() {
         worker.stop();
       });
 
       worker.start();
-
     });
   });
 
@@ -563,17 +545,16 @@ describe('Worker Disconnection', function() {
 
     before(function() {
       workerOpts = {
-        heartbeat: 10,
+        heartbeat: 20,
         reconnect: 200
       };
     });
 
-
     it('send 3 Heartbeat messages then reconnect', function(done) {
 
       var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_DISCONNECT, MDP.W_READY, MDP.W_HEARTBEAT];
-
       var typesIndex = -1;
+
       mockBroker.on('message', function(a, b, c) {
         typesIndex++;
 
@@ -581,24 +562,25 @@ describe('Worker Disconnection', function() {
           done();
           return;
         }
+        
         if (typesIndex >= types.length) {
           return;
         }
+
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, b.toString());
         assert.equal(types[typesIndex], c.toString());
       });
 
       worker.start();
-
     });
 
 
     it('emit Disconnect when detecting it, before sending it', function(done) {
 
       var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT];
-
       var typesIndex = -1;
+
       mockBroker.on('message', function(a, b, c) {
         typesIndex++;
 
@@ -618,7 +600,6 @@ describe('Worker Disconnection', function() {
       })
 
       worker.start();
-
     });
 
   });
