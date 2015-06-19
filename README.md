@@ -56,8 +56,8 @@ node examples/echo/client
 
 2) **stocks** : get stocks data from yahoo
 ```
-node examples/echo/worker
-node examples/echo/client
+node examples/stocks/worker
+node examples/stocks/client
 ```
 
 

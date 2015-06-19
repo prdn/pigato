@@ -4,7 +4,7 @@ var Worker = require('./../../index').Worker;
 
 var conf = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'UTF-8'));
 
-var worker = new Worker('tcp://' + conf.broker.host + ':' + conf.broker.port, 'stock')
+var worker = new Worker(conf.broker.host, 'stock')
 worker.start();
 
 worker.on('error',function(err) {

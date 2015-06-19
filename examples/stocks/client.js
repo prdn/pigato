@@ -3,7 +3,7 @@ var Client = require('./../../index').Client;
 
 var conf = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'UTF-8'));
 
-var client = new Client('tcp://' + conf.broker.host + ':' + conf.broker.port);
+var client = new Client(conf.broker.host);
 client.start();
 
 client.on(
