@@ -1,5 +1,5 @@
 env:
-- ZMQ="git://github.com/zeromq/zeromq4-1.git -b v4.1.0" SODIUM="git://github.com/jedisct1/libsodium.git -b 0.4.5"
+- ZMQ="git://github.com/zeromq/zeromq4-1.git -b v4.1.2" SODIUM="git://github.com/jedisct1/libsodium.git -b 0.4.5"
 before_install:
 - sudo apt-get install uuid-dev
 - '[ -z "$SODIUM" ] || git clone --depth 1 $SODIUM libsodium'
@@ -19,7 +19,6 @@ before_install:
 - cd ..
 language: node_js
 node_js:
-- "0.10"
 - "0.12"
 - "iojs"
 script: travis_retry npm test
