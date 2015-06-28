@@ -1,6 +1,9 @@
 # PIGATO CHANGELOG
 
-### dev
+### v0.0.39
+* Minor perf improvements
+* load and rand broker policies
+* Wildcard fixes (maxired)
 * Symmetric behaviour for Client/Worker/Broker (maxired)
 * Add Broker onStart/onStop callbacks and start/stop events (maxired)
 * Add Worker onConnect/onDisconnect callbacks and connect/disconnect/start/stop events (maxired)
