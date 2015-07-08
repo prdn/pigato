@@ -10,7 +10,7 @@ worker.on('error', function(e) {
   console.log('ERROR', e);
 });
 
-worker.on('request', function(inp, rep) {
+worker.on('request', function(inp, rep, opts) {
   rep.opts.cache = 10000;
   rep.end(inp);
 });

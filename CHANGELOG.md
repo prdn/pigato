@@ -1,5 +1,8 @@
 # PIGATO CHANGELOG
 
+### v0.0.40
+* Worker can see Client request options
+
 ### v0.0.39
 * Minor perf improvements
 * load and rand broker policies
