@@ -68,7 +68,7 @@ More examples
 ### Performance
 
 [PIGATO-PERF](https://github.com/prdn/pigato-perf) : a command-line tool to test PIGATO performances in different scenarios.
-
+i
 ## API
 
 ### Broker
@@ -109,6 +109,7 @@ broker.start(function() {
 Worker receives `request` events with 2 arguments:
 * `data` - data sent from the Client (type=string/object/array).
 * `reply` - extended writable stream (type=object)
+* `opts` - client request options (type=object)
 
 `reply` writable stream exposes also following methods and attributes:
 
