@@ -169,8 +169,8 @@ Take note: due to the framing protocol of `zmq` only the data supplied to `respo
 
 
 ### Client
-#### `PIGATO.Client(addrs)`
-* `addrs` - list of Broker addresses (array)
+#### `PIGATO.Client(addr, conf)`
+* `addr` - Broker address (type=string, i.e: 'tcp://localhost:12345') 
 * `conf`
   * `autostart`: automatically starts the Client (type=boolean, default=false)
   * `onConnect`: function to be called when the Client connects to the Broker
