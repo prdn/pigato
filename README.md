@@ -106,7 +106,7 @@ broker.start(function() {
 #### Methods
 
 ##### `on`
-Worker receives `request` events with 2 arguments:
+Worker receives `request` events with 3 arguments:
 * `data` - data sent from the Client (type=string/object/array).
 * `reply` - extended writable stream (type=object)
 * `opts` - client request options (type=object)
