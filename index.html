@@ -47,6 +47,8 @@
 <a href="https://github.com/prdn/pigato">PIGATO</a> : PIGATO Client/Worker/Broker for Node.js / Io.js</li>
 <li>
 <a href="https://github.com/prdn/pigato-ruby">PIGATO-RUBY</a> : PIGATO Client/Worker for Ruby</li>
+<li>
+<a href="https://github.com/prdn/pigato-go">PIGATO-GO</a> : PIGATO Client for Go</li>
 </ul>
 
 <h2>
@@ -103,8 +105,8 @@ node examples/echo/client
 
 <p>2) <strong>stocks</strong> : get stocks data from yahoo</p>
 
-<pre><code>node examples/echo/worker
-node examples/echo/client
+<pre><code>node examples/stocks/worker
+node examples/stocks/client
 </code></pre>
 
 <p>More examples</p>
@@ -114,7 +116,8 @@ node examples/echo/client
 <h3>
 <a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance</h3>
 
-<p><a href="https://github.com/prdn/pigato-perf">PIGATO-PERF</a> : a command-line tool to test PIGATO performances in different scenarios.</p>
+<p><a href="https://github.com/prdn/pigato-perf">PIGATO-PERF</a> : a command-line tool to test PIGATO performances in different scenarios.
+i</p>
 
 <h2>
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
@@ -199,13 +202,15 @@ broker.start(function() {
 <a id="on" class="anchor" href="#on" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>on</code>
 </h5>
 
-<p>Worker receives <code>request</code> events with 2 arguments:</p>
+<p>Worker receives <code>request</code> events with 3 arguments:</p>
 
 <ul>
 <li>
 <code>data</code> - data sent from the Client (type=string/object/array).</li>
 <li>
 <code>reply</code> - extended writable stream (type=object)</li>
+<li>
+<code>opts</code> - client request options (type=object)</li>
 </ul>
 
 <p><code>reply</code> writable stream exposes also following methods and attributes:</p>
@@ -281,12 +286,12 @@ worker.on('request', function(data, reply) {
 <a id="client" class="anchor" href="#client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client</h3>
 
 <h4>
-<a id="pigatoclientaddrs" class="anchor" href="#pigatoclientaddrs" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.Client(addrs)</code>
+<a id="pigatoclientaddr-conf" class="anchor" href="#pigatoclientaddr-conf" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>PIGATO.Client(addr, conf)</code>
 </h4>
 
 <ul>
 <li>
-<code>addrs</code> - list of Broker addresses (array)</li>
+<code>addr</code> - Broker address (type=string, i.e: 'tcp://localhost:12345') </li>
 <li>
 <code>conf</code>
 
