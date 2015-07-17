@@ -8,7 +8,6 @@ var bhost = location + uuid.v4();
 
 var broker = new PIGATO.Broker(bhost)
 
-
 describe('BASE', function() {
 
   before(function(done) {
