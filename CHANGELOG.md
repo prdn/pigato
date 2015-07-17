@@ -2,10 +2,13 @@
 
 ### v0.0.40
 * Worker can see Client request options
+* Broker stop timeout (flush sockets)
+* Fix Worker call reply.end() without arguments
+* Added error emitter when Broker receives invalid messages
 
 ### v0.0.39
 * Minor perf improvements
-* load and rand broker policies
+* Load and rand broker policies
 * Wildcard fixes (maxired)
 * Symmetric behaviour for Client/Worker/Broker (maxired)
 * Add Broker onStart/onStop callbacks and start/stop events (maxired)
