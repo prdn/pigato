@@ -14,6 +14,7 @@ PIGATO aims to offer an high-performance, reliable, scalable and extensible serv
 
 * [PIGATO](https://github.com/prdn/pigato) : PIGATO Client/Worker/Broker for Node.js / Io.js
 * [PIGATO-RUBY](https://github.com/prdn/pigato-ruby) : PIGATO Client/Worker for Ruby
+* [PIGATO-GO](https://github.com/prdn/pigato-go) : PIGATO Client for Go
 
 
 ## Structure and Protocol
