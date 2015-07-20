@@ -17,7 +17,7 @@ Directory.prototype.start = function() {
   var self = this;
 
   this.wrk.on('request', function(inp, rep) {
-    rep.end(self._dir[inp] || []);
+    rep.end(inp ? (self._dir[inp] || []) : self._dir);
   });
 
   this.sub.on('message', function(data) {
