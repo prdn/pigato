@@ -31,6 +31,8 @@ Directory.prototype.start = function() {
   
   this.sub.subscribe(this.service);
   this.onStart();
+
+  this.wrk.heartbeat({ update: 1 }, true);
 };
 
 Directory.prototype.stop = function() {
