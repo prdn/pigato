@@ -5,6 +5,7 @@
 * Broker stop timeout (flush sockets)
 * Fix Worker call reply.end() without arguments
 * Added error emitter when Broker receives invalid messages
+* Worker heartbeating logic improvement
 
 ### v0.0.39
 * Minor perf improvements
