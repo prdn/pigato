@@ -38,7 +38,7 @@ describe('Worker', function() {
   it('connect to a zmq endpoint and call callback once ready made round trip', function(done) {
 
     var called = false;
-    var types = [MDP.W_READY, MDP.W_DISCONNECT];
+    var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_DISCONNECT];
     var typesIndex = 0;
     
     mockBroker.on('message', function(a, b, c) {
@@ -46,9 +46,9 @@ describe('Worker', function() {
       assert.equal(MDP.WORKER, b.toString());
       assert.equal(types[typesIndex], c.toString());
       typesIndex++;
-      if (typesIndex == 1) {
+      if (typesIndex == 2) {
         mockBroker.send([a, b, c]);
-      };
+      }
       called = true;
     });
 
@@ -65,7 +65,7 @@ describe('Worker', function() {
   it('connect to a zmq endpoint and emit \'connect\' once ready made round trip', function(done) {
 
     var called = false;
-    var types = [MDP.W_READY, MDP.W_DISCONNECT];
+    var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_DISCONNECT];
     var typesIndex = 0;
     
     mockBroker.on('message', function(a, b, c) {
@@ -122,7 +122,7 @@ describe('Worker', function() {
 
       var heartbeatCount = 0
       var typesIndex = 0;
-      var lastDate = 0;
+      var lastDate = new Date();
 
       mockBroker.on('message', function(a, b, c) {
         assert.equal(worker.conf.name, a.toString());
@@ -132,11 +132,10 @@ describe('Worker', function() {
         if (c.toString() == MDP.W_HEARTBEAT) {
           heartbeatCount++;
 
-          var currentDate = +new Date();
+          var currentDate = new Date();
 
           // should be around 10, but jitter can occur
-          assert.ok(currentDate - lastDate > 5);
-          assert.ok(currentDate - lastDate < 25);
+          assert.ok(currentDate - lastDate < 20);
           lastDate = currentDate;
 
           if (heartbeatCount == 3) {
@@ -512,7 +511,7 @@ describe('Worker Disconnection', function() {
   describe('when stop is called when connected', function() {
     it('send Disconnect', function(done) {
 
-      var types = [MDP.W_READY, MDP.W_DISCONNECT];
+      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_DISCONNECT];
       var typesIndex = 0;
       
       mockBroker.on('message', function(a, b, c) {
@@ -551,7 +550,7 @@ describe('Worker Disconnection', function() {
 
     it('send 3 Heartbeat messages then reconnect', function(done) {
 
-      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_DISCONNECT, MDP.W_READY, MDP.W_HEARTBEAT];
+      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_DISCONNECT, MDP.W_READY, MDP.W_HEARTBEAT];
       var typesIndex = -1;
 
       mockBroker.on('message', function(a, b, c) {
@@ -577,7 +576,7 @@ describe('Worker Disconnection', function() {
 
     it('emit Disconnect when detecting it, after sending it', function(done) {
 
-      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_DISCONNECT];
+      var types = [MDP.W_READY, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_HEARTBEAT, MDP.W_DISCONNECT];
       var typesIndex = -1;
 
       mockBroker.on('message', function(a, b, c) {
