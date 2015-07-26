@@ -127,7 +127,7 @@ Worker receives `request` events with 3 arguments:
 var worker = new PIGATO.Worker('tcp://localhost:12345', 'my-service');
 worker.start();
 
-worker.on('request', function(data, reply) {
+worker.on('request', function(data, reply, copts) {
   for (var i = 0; i < 1000; i++) {
     reply.write('PARTIAL DATA ' + i);
   }
@@ -135,10 +135,9 @@ worker.on('request', function(data, reply) {
 });
 
 // or
-worker.on('request', function(data, reply) {
+worker.on('request', function(data, reply, copts) {
   fs.createReadStream(data).pipe(reply);
 });
-
 ```
 
 Worker may also specify whether the reply should be cached and the cache timeout in milliseconds 
