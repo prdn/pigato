@@ -21,7 +21,7 @@
     "lodash": "~3.10.0",
     "readable-stream": "~2.0.0",
     "node-uuid": "~1.4.2",
-    "zmq": "~2.12.0"
+    "zmq": "~2.13.0"
   },
   "engine": {
     "node": ">=0.10"
