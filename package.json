@@ -16,10 +16,10 @@
     "micro-services"
   ],
   "dependencies": {
-    "async": "~1.4.0",
+    "async": "~1.4.2",
     "debug": "~2.0.0",
     "lodash": "~3.10.0",
-    "readable-stream": "~2.0.0",
+    "readable-stream": "~2.0.2",
     "node-uuid": "~1.4.2",
     "zmq": "~2.13.0"
   },
