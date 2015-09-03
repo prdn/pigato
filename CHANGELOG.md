@@ -1,5 +1,15 @@
 # PIGATO CHANGELOG
 
+### v0.0.42
+* Upgraded to zmq-2.13.0 to support iojs >= 3.0
+* Removed cache support from Broker (shoulbe be refactored)
+* Broker minor refactoring
+* Switched to use an improved performance queue library
+
+### v0.0.41
+* Minor performance improvements
+* Test fixes
+
 ### v0.0.40
 * Worker can see Client request options
 * Broker stop timeout (flush sockets)
