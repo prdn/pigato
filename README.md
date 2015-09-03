@@ -140,17 +140,6 @@ worker.on('request', function(data, reply, copts) {
 });
 ```
 
-Worker may also specify whether the reply should be cached and the cache timeout in milliseconds 
-
-**Example**
-
-```
-worker.on('request', function(data, reply) {
-  reply.opts.cache = 1000; // cache reply for 1 second
-  reply.end('FINAL DATA');
-});
-```
-
 Worker can change concurrency level updating its configuration. This information is carried with the heartbeat message.
 
 **Example**
