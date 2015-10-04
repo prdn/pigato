@@ -1,8 +1,8 @@
 var PIGATO = require('../');
 
-//var uuid = require('node-uuid');
-//var bhost = 'inproc://#' + uuid.v4();
-var bhost = 'tcp://0.0.0.0:2020';
+var uuid = require('node-uuid');
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
 var broker = new PIGATO.Broker(bhost, {
   heartbeat: 10000
