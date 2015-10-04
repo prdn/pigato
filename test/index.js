@@ -5,7 +5,7 @@ var uuid = require('node-uuid');
 //var bhost = 'inproc://#' + uuid.v4();
 var bhost = 'tcp://0.0.0.0:2020';
 
-var broker = new PIGATO.Broker(bhost)
+var broker = new PIGATO.Broker(bhost);
 
 describe('BASE', function() {
 
@@ -141,7 +141,7 @@ describe('BASE', function() {
 
       worker.start();
       workers.push(worker);
-    };
+    }
 
     spawn(function(inp, res) {
       res.reject(chunk);
@@ -191,7 +191,7 @@ describe('BASE', function() {
       worker.start();
       workers.push(worker);
       return worker;
-    };
+    }
 
     var client = new PIGATO.Client(bhost);
     client.start();
@@ -293,8 +293,8 @@ describe('BASE', function() {
     client.start();
 
     client.request(ns, 'foo', {
-        timeout: 60
-      })
+      timeout: 60
+    })
       .on('error', function(err) {
         chai.assert.equal(err, 'C_TIMEOUT');
         stop();

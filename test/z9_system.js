@@ -52,13 +52,13 @@ describe('FILE DESCRIPTORS', function() {
   });*/
 
 
-  describe("When I create lots of sockets", function() {
+  describe('When I create lots of sockets', function() {
 
     before(function(done) {
       setTimeout(done, 100);
     });
 
-    it("still works if I close them in the meantime", function(done) {
+    it('still works if I close them in the meantime', function(done) {
 
       var cnt = 0;
       var step = function() {

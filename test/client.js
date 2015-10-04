@@ -21,13 +21,13 @@ describe('Client', function() {
     client = new PIGATO.Client(bhost, clientOpts);
     mockBroker = zmq.socket('router');
     mockBroker.bindSync(bhost);
-  })
+  });
 
   afterEach(function() {
     client.removeAllListeners();
     client.stop();
     mockBroker.unbind(bhost);
-  })
+  });
 
   it('connect to a zmq endpoint and call callback once heartbeat made round trip', function(done) {
 
@@ -118,7 +118,7 @@ describe('Client', function() {
       assert.equal(true, called);
       assert.equal(false, cbCalled);
       done();
-    })
+    });
 
     client.on('connect', function() {
       cbCalled = true;
@@ -177,14 +177,14 @@ describe('Client', function() {
     var partial = false;
 
     client.on('connect', function() {
-       client.request('foo', 'bar', function() {
-        partial = true;
-      }, function(err, data) {
+      client.request('foo', 'bar', function() {
+         partial = true;
+       }, function(err, data) {
         assert.equal(false, partial);
         assert.equal(err, 0);
         assert.equal(data, toAnswer);
         done();
-      })
+      });
     });
     client.start();
   });
@@ -213,7 +213,7 @@ describe('Client', function() {
         assert.equal(data, toAnswer);
       }).on('end', function(err, data) {
         done();
-      })
+      });
     });
     client.start();
   });
@@ -252,7 +252,7 @@ describe('Client', function() {
       }).on('end', function(err, data) {
         assert.equal(3, index);
         done();
-      })
+      });
     });
 
     client.start();
@@ -320,7 +320,7 @@ describe('Client', function() {
   it('emit an ERR_REQ_INVALID error if we send a reply to an invalid request', function(done) {
 
     client.on('error', function(err) {
-      assert.ok(err)
+      assert.ok(err);
       assert.equal(err, 'ERR_REQ_INVALID');
       done();
     
@@ -334,7 +334,7 @@ describe('Client', function() {
       }
     });
     client.on('connect', function() {
-      mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY, '', 'MYUNKNOWREQUEST', null, JSON.stringify("bar")]);
+      mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY, '', 'MYUNKNOWREQUEST', null, JSON.stringify('bar')]);
 
     });
     client.start();
@@ -359,11 +359,11 @@ describe('Client', function() {
     });
 
     client.on('error', function(err) {
-      assert.ok(err)
+      assert.ok(err);
       assert.equal(err, 'ERR_MSG_TYPE');
       assert.equal(true, called);
       done();
-    })
+    });
 
     client.on('connect', function() {
       client.request('foo', 'bar', function(err, data) {
@@ -385,7 +385,7 @@ describe('Client', function() {
       clientOpts = {
         heartbeat: 20
       };
-    })
+    });
 
     it('emit an error when timeout exceeded', function(done) {
 
@@ -413,7 +413,7 @@ describe('Client', function() {
 
     after(function() {
       clientOpts = undefined;
-    })
+    });
   });
 
 
@@ -423,7 +423,7 @@ describe('Client', function() {
       clientOpts = {
         heartbeat: 50
       };
-    })
+    });
 
     it('wait for the heartbeat to expire before the error is returned', function(done) {
 
@@ -464,7 +464,7 @@ describe('Client', function() {
 
     after(function() {
       clientOpts = undefined;
-    })
+    });
   });
 
 
@@ -474,7 +474,7 @@ describe('Client', function() {
       clientOpts = {
         heartbeat: 25
       };
-    })
+    });
 
     it('send heartbeat regularly', function(done) {
 
@@ -502,7 +502,7 @@ describe('Client', function() {
 
     after(function() {
       clientOpts = undefined;
-    })
+    });
   });
 
 
@@ -527,11 +527,11 @@ describe('Client', function() {
         assert.equal(client.conf.name, id.toString());
         assert.equal(MDP.CLIENT, clazz.toString());
         assert.equal(MDP.W_HEARTBEAT, type.toString());
-        assert.equal( requestId , rid.toString())
+        assert.equal( requestId , rid.toString());
       }
 
       if (heartbeatCount == 1) {
-        done()
+        done();
       }
 
     });
@@ -560,7 +560,7 @@ describe('Client', function() {
         assert.equal(client.conf.name, id.toString());
         assert.equal(MDP.CLIENT, clazz.toString());
         assert.equal(MDP.W_HEARTBEAT, type.toString());
-        assert.equal(heartbeatContent[heartbeatCount], rid.toString())
+        assert.equal(heartbeatContent[heartbeatCount], rid.toString());
         heartbeatCount++;
       }
 
@@ -580,4 +580,4 @@ describe('Client', function() {
     client.start();
   });
 
-})
+});

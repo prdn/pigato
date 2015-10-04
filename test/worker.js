@@ -21,7 +21,7 @@ describe('Worker', function() {
     worker = new PIGATO.Worker(bhost, workerTopic, workerOpts);
     mockBroker = zmq.socket('router');
     mockBroker.bindSync(bhost);
-  })
+  });
 
   afterEach(function(done) {
 
@@ -33,7 +33,7 @@ describe('Worker', function() {
     });
 
     worker.stop();
-  })
+  });
 
   it('connect to a zmq endpoint and call callback once ready made round trip', function(done) {
 
@@ -101,8 +101,8 @@ describe('Worker', function() {
     mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST]);
 
     worker.socket.on('message', function(a, b, c) {
-      assert.equal(MDP.W_REQUEST, b.toString())
-      countMessage++
+      assert.equal(MDP.W_REQUEST, b.toString());
+      countMessage++;
     });
   });
 
@@ -111,7 +111,7 @@ describe('Worker', function() {
     before(function() {
       workerOpts = {
         heartbeat: 10
-      }
+      };
     });
 
     after(function() {
@@ -120,7 +120,7 @@ describe('Worker', function() {
 
     it('emit hearbeat regularly ', function(done) {
 
-      var heartbeatCount = 0
+      var heartbeatCount = 0;
       var typesIndex = 0;
       var lastDate = new Date();
 
@@ -236,7 +236,7 @@ describe('Worker', function() {
     var received = false;
     
     worker.on('request', function(data, reply) {
-      received = true
+      received = true;
     });
 
     worker.start();
@@ -272,7 +272,7 @@ describe('Worker', function() {
       toCheck = function(a, side, type, clientId) {
         assert.ok(clientId);
         assert.equal(clientId.toString(), 'clientId');
-        done()
+        done();
       };
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
@@ -282,7 +282,7 @@ describe('Worker', function() {
         assert.ok(empty);
         assert.equal(empty.length, 0);
         assert.equal(empty.toString().length, 0);
-        done()
+        done();
       };
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
@@ -292,7 +292,7 @@ describe('Worker', function() {
         assert.ok(empty);
         assert.equal(empty.length, 0);
         assert.equal(empty.toString().length, 0);
-        done()
+        done();
       };
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', 'NOTEMPTY', 'requestId']);
     });
@@ -302,7 +302,7 @@ describe('Worker', function() {
       toCheck = function(a, side, type, clientId, service, requestId) {
         assert.ok(requestId);
         assert.equal(requestId.toString(), 'requestId' + rid);
-        done()
+        done();
       };
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + rid]);
     });
@@ -312,7 +312,7 @@ describe('Worker', function() {
       toCheck = function(a, side, type, clientId, service, requestId, status) {
         assert.ok(status);
         assert.equal(status.toString(), 0);
-        done()
+        done();
       };
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
@@ -323,7 +323,7 @@ describe('Worker', function() {
         assert.ok(data);
         assert.ok(data.toString());
         assert.equal(JSON.parse(data.toString()), toAnswer);
-        done()
+        done();
       };
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
@@ -345,7 +345,7 @@ describe('Worker', function() {
 
         assert.equal(parsed.foo, 'bar');
         assert.equal(parsed.toto, 42);
-        done()
+        done();
       };
   
       mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
@@ -456,7 +456,7 @@ describe('Worker', function() {
 
     after(function() {
       workerOpts = {};
-    })
+    });
 
     it('requests are still handled in //', function(done) {
 
@@ -595,7 +595,7 @@ describe('Worker Disconnection', function() {
         assert(typesIndex, 3);
         worker.removeAllListeners('disconnect');
         done();
-      })
+      });
 
       worker.start();
     });

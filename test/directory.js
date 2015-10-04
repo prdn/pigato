@@ -14,7 +14,7 @@ var brokerConf = {};
 describe('DIRECTORY', function() {
 
   beforeEach(function(done) {
-    brokerConf.intch = "ipc:///tmp/" + uuid.v4();
+    brokerConf.intch = 'ipc:///tmp/' + uuid.v4();
 
     broker = new PIGATO.Broker(bhost, brokerConf);
 
@@ -24,7 +24,7 @@ describe('DIRECTORY', function() {
       });
       ds.conf.onStart = done;
       ds.start();
-    }
+    };
 
     broker.start();
   });
@@ -53,7 +53,7 @@ describe('DIRECTORY', function() {
         });
         worker.start();
         return worker;
-      };
+      }
 
       client.start();
 
@@ -123,7 +123,7 @@ describe('DIRECTORY', function() {
         });
         worker.start();
         return worker;
-      };
+      }
 
       client.start();
 
@@ -177,7 +177,7 @@ describe('DIRECTORY', function() {
         client.stop();
         done(err);
       }
-    })
+    });
   });
 
 });

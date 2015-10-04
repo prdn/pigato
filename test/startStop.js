@@ -121,7 +121,7 @@ describe('StartStop', function() {
     it('call the callback on stop', function(done) {
       worker.conf.onDisconnect = function() {
         client.conf.onDisconnect = done;
-        client.stop()
+        client.stop();
       };
       worker.stop();
     });

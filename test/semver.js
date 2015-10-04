@@ -36,8 +36,8 @@ describe('SEMVER', function() {
     var workerId = worker.conf.name;
     client.request(ns, 'foo')
     .on('data', function(data) {
-        chai.assert.equal(data, workerId);
-      })
+      chai.assert.equal(data, workerId);
+    })
       .on('error', function(err) {
         stop(err);
       })

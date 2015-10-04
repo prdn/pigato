@@ -34,7 +34,7 @@ describe('TARGET', function() {
       });
       worker.start();
       workers.push(worker);
-    };
+    }
 
     client.start();
 
@@ -49,8 +49,8 @@ describe('TARGET', function() {
     function request() {
       var workerId = workers[Math.round(Math.random() * 1000 % 9)].conf.name;
       client.request(ns, 'foo', {
-          workerId: workerId
-        })
+        workerId: workerId
+      })
         .on('data', function(data) {
           chai.assert.equal(data, workerId);
         })
@@ -76,5 +76,5 @@ describe('TARGET', function() {
       client.stop();
       done(err);
     }
-  })
+  });
 });
