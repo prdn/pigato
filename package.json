@@ -38,7 +38,7 @@
   },
   "scripts": {
     "test": "make test",
-    "lint": "eslint --config .eslintrc index.js lib/ test/"
+    "lint": "eslint --config .eslintrc --fix index.js lib/ test/"
   },
   "license": "MIT",
   "repository": {

@@ -109,8 +109,6 @@ describe('BASE', function() {
     var client = new PIGATO.Client(bhost);
     client.start();
 
-    var repIx = 0;
-
     client.request(
       ns, 'foo',
       undefined,
@@ -319,6 +317,7 @@ describe('BASE', function() {
       undefined,
       function(err, data) {
         chai.assert.equal(err, 'C_TIMEOUT');
+        chai.assert.equal(data, undefined);
         stop();
       }, {
         timeout: 60

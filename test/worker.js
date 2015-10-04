@@ -4,8 +4,8 @@ var MDP = require('../lib/mdp');
 
 var PIGATO = require('../');
 
-var chai = require('chai'),
-  assert = chai.assert;
+var chai = require('chai');
+var assert = chai.assert;
 var uuid = require('node-uuid');
 
 var location = 'inproc://#';
@@ -100,7 +100,7 @@ describe('Worker', function() {
     
     mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST]);
 
-    worker.socket.on('message', function(a, b, c) {
+    worker.socket.on('message', function(a, b) {
       assert.equal(MDP.W_REQUEST, b.toString());
       countMessage++;
     });
@@ -121,7 +121,6 @@ describe('Worker', function() {
     it('emit hearbeat regularly ', function(done) {
 
       var heartbeatCount = 0;
-      var typesIndex = 0;
       var lastDate = new Date();
 
       mockBroker.on('message', function(a, b, c) {
@@ -171,6 +170,7 @@ describe('Worker', function() {
 
     worker.on('request', function(data, reply) {
       assert.equal(data, undefined);
+      assert.equal(typeof reply, 'object');
       done();
     });
 
@@ -183,6 +183,7 @@ describe('Worker', function() {
 
     worker.on('request', function(data, reply) {
       assert.equal(data, 'foo');
+      assert.equal(typeof reply, 'object');
       done();
     });
 
@@ -196,6 +197,7 @@ describe('Worker', function() {
     worker.on('request', function(data, reply) {
       assert.equal(typeof data, 'object');
       assert.equal(Object.keys(data).length, 0);
+      assert.equal(typeof reply, 'object');
       done();
     });
 
@@ -215,6 +217,7 @@ describe('Worker', function() {
       assert.equal(typeof data, 'object');
       assert.ok(data.obj);
       assert.equal(data.obj.foo, 'baz');
+      assert.equal(typeof reply, 'object');
       done();
     });
 
@@ -236,6 +239,7 @@ describe('Worker', function() {
     var received = false;
     
     worker.on('request', function(data, reply) {
+      assert.equal(typeof reply, 'object');
       received = true;
     });
 
@@ -258,7 +262,7 @@ describe('Worker', function() {
         reply.end(toAnswer);
       });
     
-      mockBroker.on('message', function(a, side, type, service, empty, rid, status, data) {
+      mockBroker.on('message', function(a, side, type) {
         if (MDP.WORKER == side.toString() && type.toString() == MDP.W_REPLY) {
           assert.ok(toCheck);
           toCheck.apply(toCheck, arguments);
@@ -308,7 +312,6 @@ describe('Worker', function() {
     });
 
     it('answer status 0 for a response with no problem', function(done) {
-      var rid = Math.random();
       toCheck = function(a, side, type, clientId, service, requestId, status) {
         assert.ok(status);
         assert.equal(status.toString(), 0);
@@ -318,7 +321,6 @@ describe('Worker', function() {
     });
 
     it('string data are correctly sended', function(done) {
-      var rid = Math.random();
       toCheck = function(a, side, type, clientId, service, requestId, status, data) {
         assert.ok(data);
         assert.ok(data.toString());
@@ -335,7 +337,6 @@ describe('Worker', function() {
         toto: 42
       };
 
-      var rid = Math.random();
       toCheck = function(a, side, type, clientId, service, requestId, status, data) {
         assert.ok(data);
         assert.ok(data.toString());
@@ -425,6 +426,7 @@ describe('Worker', function() {
 
 
   describe('when I send more request in // than conf.concurency', function() {
+    var toCheck = undefined;
 
     before(function() {
       workerOpts = {
@@ -446,7 +448,7 @@ describe('Worker', function() {
         }, 30 - requestIndex * 10);
       });
 
-      mockBroker.on('message', function(a, side, type, service, empty, rid, status, data) {
+      mockBroker.on('message', function(a, side, type) {
         if (MDP.WORKER == side.toString() && type.toString() == MDP.W_REPLY) {
           assert.ok(toCheck);
           toCheck.apply(toCheck, arguments);
@@ -461,12 +463,12 @@ describe('Worker', function() {
     it('requests are still handled in //', function(done) {
 
       var replyIndex = 3;
-      toCheck = function(a, side, type, clientId, service, requestId, status, data) {
+      toCheck = function(a, side, type, clientId, service, requestId) {
         assert.equal(worker.conf.name, a.toString());
         assert.equal(MDP.WORKER, side.toString());
 
         if (type.toString() == MDP.W_HEARTBEAT) {
-          mockBroker.send([a, b, type]);
+          mockBroker.send([a, undefined, type]);
 
         } else if (type.toString() == MDP.W_REPLY) {
 

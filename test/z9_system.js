@@ -1,8 +1,6 @@
 var PIGATO = require('../');
 var zmq = require('zmq');
 var chai = require('chai');
-var uuid = require('node-uuid');
-
 var assert = chai.assert;
 
 //var bhost = 'inproc://#' + uuid.v4();
