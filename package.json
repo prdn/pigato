@@ -37,7 +37,8 @@
     "mocha": "~2.2.5"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "lint": "eslint --config .eslintrc index.js lib/ test/"
   },
   "license": "MIT",
   "repository": {
