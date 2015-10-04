@@ -48,5 +48,8 @@
   "bugs": {
     "url": "https://github.com/prdn/pigato/issues"
   },
-  "homepage": "https://github.com/prdn/pigato"
+  "homepage": "https://github.com/prdn/pigato",
+  "optionalDependencies": {
+    "eslint": "~1.6.0"
+  }
 }
