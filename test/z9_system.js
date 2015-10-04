@@ -5,9 +5,8 @@ var uuid = require('node-uuid');
 
 var assert = chai.assert;
 
-var location = 'inproc://#';
-
-var bhost = location + uuid.v4();
+//var bhost = 'inproc://#' + uuid.v4();
+var bhost = 'tcp://0.0.0.0:2020';
 
 var broker = new PIGATO.Broker(bhost);
 
