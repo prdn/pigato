@@ -7,7 +7,7 @@ var bhost = 'inproc://#' + uuid.v4();
 
 var broker = new PIGATO.Broker(bhost);
 
-describe('CONCURRENCY', function () {
+describe('CONCURRENCY', function() {
   
   before(function(done) {
     broker.conf.onStart = done;
