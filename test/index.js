@@ -2,11 +2,10 @@ var PIGATO = require('../');
 var chai = require('chai');
 var uuid = require('node-uuid');
 
-var location = 'inproc://#';
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
-var bhost = location + uuid.v4();
-
-var broker = new PIGATO.Broker(bhost)
+var broker = new PIGATO.Broker(bhost);
 
 describe('BASE', function() {
 
@@ -110,8 +109,6 @@ describe('BASE', function() {
     var client = new PIGATO.Client(bhost);
     client.start();
 
-    var repIx = 0;
-
     client.request(
       ns, 'foo',
       undefined,
@@ -142,7 +139,7 @@ describe('BASE', function() {
 
       worker.start();
       workers.push(worker);
-    };
+    }
 
     spawn(function(inp, res) {
       res.reject(chunk);
@@ -192,7 +189,7 @@ describe('BASE', function() {
       worker.start();
       workers.push(worker);
       return worker;
-    };
+    }
 
     var client = new PIGATO.Client(bhost);
     client.start();
@@ -294,8 +291,8 @@ describe('BASE', function() {
     client.start();
 
     client.request(ns, 'foo', {
-        timeout: 60
-      })
+      timeout: 60
+    })
       .on('error', function(err) {
         chai.assert.equal(err, 'C_TIMEOUT');
         stop();
@@ -320,6 +317,7 @@ describe('BASE', function() {
       undefined,
       function(err, data) {
         chai.assert.equal(err, 'C_TIMEOUT');
+        chai.assert.equal(data, undefined);
         stop();
       }, {
         timeout: 60

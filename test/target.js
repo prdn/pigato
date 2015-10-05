@@ -2,8 +2,8 @@ var PIGATO = require('../');
 var chai = require('chai');
 var uuid = require('node-uuid');
 
-var location = 'inproc://#';
-var bhost = location + uuid.v4();
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
 var broker = new PIGATO.Broker(bhost);
    
@@ -34,7 +34,7 @@ describe('TARGET', function() {
       });
       worker.start();
       workers.push(worker);
-    };
+    }
 
     client.start();
 
@@ -49,8 +49,8 @@ describe('TARGET', function() {
     function request() {
       var workerId = workers[Math.round(Math.random() * 1000 % 9)].conf.name;
       client.request(ns, 'foo', {
-          workerId: workerId
-        })
+        workerId: workerId
+      })
         .on('data', function(data) {
           chai.assert.equal(data, workerId);
         })
@@ -76,5 +76,5 @@ describe('TARGET', function() {
       client.stop();
       done(err);
     }
-  })
+  });
 });

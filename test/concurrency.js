@@ -2,12 +2,12 @@ var PIGATO = require('../');
 var chai = require('chai');
 var uuid = require('node-uuid');
 
-var location = 'inproc://#';
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
-var bhost = location + uuid.v4();
 var broker = new PIGATO.Broker(bhost);
 
-describe('CONCURRENCY', function () {
+describe('CONCURRENCY', function() {
   
   before(function(done) {
     broker.conf.onStart = done;

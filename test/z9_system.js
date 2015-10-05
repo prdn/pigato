@@ -1,13 +1,11 @@
 var PIGATO = require('../');
 var zmq = require('zmq');
 var chai = require('chai');
+var assert = chai.assert;
 var uuid = require('node-uuid');
 
-var assert = chai.assert;
-
-var location = 'inproc://#';
-
-var bhost = location + uuid.v4();
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
 var broker = new PIGATO.Broker(bhost);
 
@@ -53,13 +51,13 @@ describe('FILE DESCRIPTORS', function() {
   });*/
 
 
-  describe("When I create lots of sockets", function() {
+  describe('When I create lots of sockets', function() {
 
     before(function(done) {
       setTimeout(done, 100);
     });
 
-    it("still works if I close them in the meantime", function(done) {
+    it('still works if I close them in the meantime', function(done) {
 
       var cnt = 0;
       var step = function() {
