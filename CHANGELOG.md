@@ -1,5 +1,10 @@
 # PIGATO CHANGELOG
 
+### v0.0.43-dev
+* Js lint
+* BREAKING: Worker and Client now must specificy 'prefix' instead of 'name'. The socket identifier is generated using 'prefix' followed by a random uuid. This fixes issues in socket identifier overlapping.
+* Support for Worker semver
+
 ### v0.0.42
 * Upgraded to zmq-2.13.0 to support iojs >= 3.0
 * Removed cache support from Broker (shoulbe be refactored)

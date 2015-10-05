@@ -42,7 +42,7 @@ describe('Worker', function() {
     var typesIndex = 0;
     
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(worker.conf.name, a.toString());
+      assert.include(a.toString(), worker.conf.prefix);
       assert.equal(MDP.WORKER, b.toString());
       assert.equal(types[typesIndex], c.toString());
       typesIndex++;
@@ -69,7 +69,7 @@ describe('Worker', function() {
     var typesIndex = 0;
     
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(worker.conf.name, a.toString());
+      assert.include(a.toString(), worker.conf.prefix);
       assert.equal(MDP.WORKER, b.toString());
       assert.equal(types[typesIndex], c.toString());
       typesIndex++;
@@ -98,7 +98,7 @@ describe('Worker', function() {
 
     worker.start();
     
-    mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST]);
+    mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST]);
 
     worker.socket.on('message', function(a, b) {
       assert.equal(MDP.W_REQUEST, b.toString());
@@ -124,7 +124,7 @@ describe('Worker', function() {
       var lastDate = new Date();
 
       mockBroker.on('message', function(a, b, c) {
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, b.toString());
 
         mockBroker.send([a, b, c]);
@@ -162,7 +162,7 @@ describe('Worker', function() {
 
     worker.start();
 
-    mockBroker.send([worker.conf.name, MDP.CLIENT, MDP.W_REQUEST]);
+    mockBroker.send([worker.socketId, MDP.CLIENT, MDP.W_REQUEST]);
   });
 
 
@@ -176,7 +176,7 @@ describe('Worker', function() {
 
     worker.start();
 
-    mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST]);
+    mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST]);
   });
 
   it('emit request events with no data when receiving a request with a JSON String', function(done) {
@@ -189,7 +189,7 @@ describe('Worker', function() {
 
     worker.start();
 
-    mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', workerTopic, '', 'requestId', '"foo"']);
+    mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', workerTopic, '', 'requestId', '"foo"']);
   });
 
   it('emit request events with no data when receiving a request with an empty JSON object', function(done) {
@@ -203,7 +203,7 @@ describe('Worker', function() {
 
     worker.start();
 
-    mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId', JSON.stringify({})]);
+    mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId', JSON.stringify({})]);
   });
 
   it('emit request events with no data when receiving a request with an complexe JSON object', function(done) {
@@ -223,7 +223,7 @@ describe('Worker', function() {
 
     worker.start();
 
-    mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId', JSON.stringify({
+    mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId', JSON.stringify({
       foo: 'bar',
       life: 42,
       tables: [],
@@ -245,7 +245,7 @@ describe('Worker', function() {
 
     worker.start();
 
-    mockBroker.send([worker.conf.name + 'LLLLL', MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
+    mockBroker.send([worker.socketId + 'LLLLL', MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
 
     setTimeout(function() {
       assert.equal(received, false);
@@ -278,7 +278,7 @@ describe('Worker', function() {
         assert.equal(clientId.toString(), 'clientId');
         done();
       };
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
 
     it('empty is empty string ', function(done) {
@@ -288,7 +288,7 @@ describe('Worker', function() {
         assert.equal(empty.toString().length, 0);
         done();
       };
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
 
     it('empty is empty string event when not empty was sended', function(done) {
@@ -298,7 +298,7 @@ describe('Worker', function() {
         assert.equal(empty.toString().length, 0);
         done();
       };
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', 'NOTEMPTY', 'requestId']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', 'NOTEMPTY', 'requestId']);
     });
 
     it('response keep the same requestId', function(done) {
@@ -308,7 +308,7 @@ describe('Worker', function() {
         assert.equal(requestId.toString(), 'requestId' + rid);
         done();
       };
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + rid]);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + rid]);
     });
 
     it('answer status 0 for a response with no problem', function(done) {
@@ -317,7 +317,7 @@ describe('Worker', function() {
         assert.equal(status.toString(), 0);
         done();
       };
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
 
     it('string data are correctly sended', function(done) {
@@ -327,7 +327,7 @@ describe('Worker', function() {
         assert.equal(JSON.parse(data.toString()), toAnswer);
         done();
       };
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
 
     it('object data are correctly sended', function(done) {
@@ -349,7 +349,7 @@ describe('Worker', function() {
         done();
       };
   
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId']);
     });
   });
 
@@ -369,7 +369,7 @@ describe('Worker', function() {
       var finished = false;
 
       mockBroker.on('message', function(a, b, c, empty, data) {
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, b.toString());
 
         if (c.toString() == MDP.W_HEARTBEAT && !finished) {
@@ -395,7 +395,7 @@ describe('Worker', function() {
       var heartbeatCount = 0;
 
       mockBroker.on('message', function(a, b, c, empty, data) {
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, b.toString());
 
         if (c.toString() == MDP.W_HEARTBEAT) {
@@ -417,9 +417,9 @@ describe('Worker', function() {
       });
 
       worker.start();
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', 'requestId' + Math.floor(Math.random() * 100)]);
     });
 
   });
@@ -464,7 +464,7 @@ describe('Worker', function() {
 
       var replyIndex = 3;
       toCheck = function(a, side, type, clientId, service, requestId) {
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, side.toString());
 
         if (type.toString() == MDP.W_HEARTBEAT) {
@@ -482,9 +482,9 @@ describe('Worker', function() {
 
       worker.start();
 
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '1']);
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '2']);
-      mockBroker.send([worker.conf.name, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '3']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '1']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '2']);
+      mockBroker.send([worker.socketId, MDP.WORKER, MDP.W_REQUEST, 'clientId', 'service', '', '3']);
     });
 
   });
@@ -517,7 +517,7 @@ describe('Worker Disconnection', function() {
       var typesIndex = 0;
       
       mockBroker.on('message', function(a, b, c) {
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, b.toString());
         assert.equal(types[typesIndex], c.toString());
         typesIndex++;
@@ -567,7 +567,7 @@ describe('Worker Disconnection', function() {
           return;
         }
 
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, b.toString());
         assert.equal(types[typesIndex], c.toString());
       });
@@ -588,7 +588,7 @@ describe('Worker Disconnection', function() {
           return;
         }
 
-        assert.equal(worker.conf.name, a.toString());
+        assert.include(a.toString(), worker.conf.prefix);
         assert.equal(MDP.WORKER, b.toString());
         assert.equal(types[typesIndex], c.toString());
       });

@@ -49,7 +49,7 @@ describe('DIRECTORY', function() {
       function spawn(ns) {
         var worker = new PIGATO.Worker(bhost, ns);
         worker.on('request', function(inp, rep) {
-          rep.end(worker.conf.name);
+          rep.end(worker.socketId);
         });
         worker.start();
         return worker;
@@ -65,7 +65,7 @@ describe('DIRECTORY', function() {
       }
 
       var workerIds = workers[nsGood].map(function(wrk) {
-        return wrk.conf.name;
+        return wrk.socketId;
       });
 
       workerIds.sort(function(a, b) {
@@ -119,7 +119,7 @@ describe('DIRECTORY', function() {
       function spawn(ns) {
         var worker = new PIGATO.Worker(bhost, ns);
         worker.on('request', function(inp, rep) {
-          rep.end(worker.conf.name);
+          rep.end(worker.conf.prefix);
         });
         worker.start();
         return worker;
@@ -135,7 +135,7 @@ describe('DIRECTORY', function() {
       }
 
       var workerIds = workers[nsGood].map(function(wrk) {
-        return wrk.conf.name;
+        return wrk.conf.prefix;
       });
 
       workerIds.sort(function(a, b) {
@@ -153,11 +153,7 @@ describe('DIRECTORY', function() {
             chai.assert.equal(3, data[nsBad].length);
             chai.assert.isAbove(Object.keys(data).length, 2);
             chai.assert.equal(1, data['$dir'].length);
-            chai.assert.equal(ds.wrk.conf.name, data['$dir'][
-              0
-            ]);
-
-
+            chai.assert.include(data['$dir'][0], ds.wrk.conf.prefix);
           })
           .on('error', function(err) {
             stop(err);

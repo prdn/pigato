@@ -34,7 +34,7 @@ describe('Client', function() {
     var called = false;
 
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(client.conf.name, a.toString());
+      assert.include(a.toString(), client.conf.prefix);
       assert.equal(MDP.CLIENT, b.toString());
       assert.equal(MDP.W_HEARTBEAT, c.toString());
 
@@ -56,7 +56,7 @@ describe('Client', function() {
     var called = false;
 
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(client.conf.name, a.toString());
+      assert.include(a.toString(), client.conf.prefix);
       assert.equal(MDP.CLIENT, b.toString());
       assert.equal(MDP.W_HEARTBEAT, c.toString());
 
@@ -78,7 +78,7 @@ describe('Client', function() {
     var cbCalled = false;
 
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(client.conf.name, a.toString());
+      assert.include(a.toString(), client.conf.prefix);
       assert.equal(MDP.CLIENT, b.toString());
       assert.equal(MDP.W_HEARTBEAT, c.toString());
       called = true;
@@ -104,7 +104,7 @@ describe('Client', function() {
     var cbCalled = false;
 
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(client.conf.name, a.toString());
+      assert.include(a.toString(), client.conf.prefix);
       assert.equal(MDP.CLIENT, b.toString());
       assert.equal(MDP.W_HEARTBEAT, c.toString());
 
@@ -133,7 +133,7 @@ describe('Client', function() {
     var cbCalled = false;
 
     mockBroker.on('message', function(a, b, c) {
-      assert.equal(client.conf.name, a.toString());
+      assert.include(a.toString(), client.conf.prefix);
       assert.equal(MDP.CLIENT, b.toString());
       assert.equal(MDP.W_HEARTBEAT, c.toString());
       mockBroker.send([a + '' + uuid.v4(), b, MDP.W_HEARTBEAT]);
@@ -288,7 +288,7 @@ describe('Client', function() {
       }
     });
     client.on('connect', function() {
-      mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY]);
+      mockBroker.send([client.socketId, MDP.CLIENT, MDP.W_REPLY]);
 
     });
     client.start();
@@ -312,7 +312,7 @@ describe('Client', function() {
       }
     });
     client.on('connect', function() {
-      mockBroker.send([client.conf.name, MDP.CLIENT, MDP.W_REPLY, '', 'MYUNKNOWREQUEST', null, JSON.stringify('bar')]);
+      mockBroker.send([client.socketId, MDP.CLIENT, MDP.W_REPLY, '', 'MYUNKNOWREQUEST', null, JSON.stringify('bar')]);
 
     });
     client.start();
@@ -498,7 +498,7 @@ describe('Client', function() {
         heartbeatCount++;
 
         assert.ok(requestId);
-        assert.equal(client.conf.name, id.toString());
+        assert.include(id.toString(), client.conf.prefix);
         assert.equal(MDP.CLIENT, clazz.toString());
         assert.equal(MDP.W_HEARTBEAT, type.toString());
         assert.equal(requestId, rid.toString());
@@ -531,7 +531,7 @@ describe('Client', function() {
       }
 
       if (type.toString() == MDP.W_HEARTBEAT) {
-        assert.equal(client.conf.name, id.toString());
+        assert.include(id.toString(), client.conf.prefix);
         assert.equal(MDP.CLIENT, clazz.toString());
         assert.equal(MDP.W_HEARTBEAT, type.toString());
         assert.equal(heartbeatContent[heartbeatCount], rid.toString());
