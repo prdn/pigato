@@ -100,6 +100,7 @@ broker.start(function() {
 * `serviceName` - service implemented by the Worker (type=string, i.e: 'echo')
   * wildcards * are supported (i.e: 'ech*')
 * `conf` - configuration override (type=object, i.e { concurrency: 20 })
+  * `prefix` - sets the Worker identifier prefix
   * `concurrency` - sets max number of concurrent requests (type=int, -1 = no limit)
   * `onConnect`: function to be called when the Worker connects to the Broker
   * `onDisconnnect`: function to be called when the Worker disconnects from the Broker
@@ -161,6 +162,7 @@ Take note: due to the framing protocol of `zmq` only the data supplied to `respo
 #### `PIGATO.Client(addr, conf)`
 * `addr` - Broker address (type=string, i.e: 'tcp://localhost:12345') 
 * `conf`
+  * `prefix` - sets the Client identifier prefix
   * `autostart`: automatically starts the Client (type=boolean, default=false)
   * `onConnect`: function to be called when the Client connects to the Broker
   * `onDisconnnect`: function to be called when the Client disconnects from the Broker
