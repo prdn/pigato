@@ -2,9 +2,8 @@ var PIGATO = require('../');
 var assert = require('chai').assert;
 var uuid = require('node-uuid');
 
-var location = 'inproc://#';
-
-var bhost = location + uuid.v4();
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 var broker = new PIGATO.Broker(bhost);
 
 var client, worker, ns;
@@ -41,7 +40,7 @@ describe('WILDCARDS', function() {
     afterEach(function() {
       client.stop();
       worker.stop();
-    })
+    });
 
     it('can be reach several times using widlcard mecanisme', function(done) {
       this.timeout(5000);
@@ -49,8 +48,8 @@ describe('WILDCARDS', function() {
 
       function request() {
         client.request(ns + '-' + uuid.v4(), chunk, {
-            timeout: 5000
-          })
+          timeout: 5000
+        })
           .on('data', function(data) {
             assert.equal(data, chunk + ':bar');
           })
@@ -77,7 +76,7 @@ describe('WILDCARDS', function() {
         assert.equal(type, 0);
         assert.equal(data, chunk + ':bar');
         done();
-      })
+      });
     });
   });
 
@@ -107,7 +106,7 @@ describe('WILDCARDS', function() {
       matchingworker.start();
       client.start();
 
-    })
+    });
 
     afterEach(function() {
       matchingworker.stop();
@@ -120,7 +119,7 @@ describe('WILDCARDS', function() {
         assert.equal(type, 0);
         assert.equal(data, 'MATCHING');
         done();
-      })
+      });
     });
   });
 
@@ -148,7 +147,7 @@ describe('WILDCARDS', function() {
       matchingworker.start();
       client.start();
 
-    })
+    });
 
     afterEach(function() {
       matchingworker.stop();
@@ -161,7 +160,7 @@ describe('WILDCARDS', function() {
         assert.equal(type, 0);
         assert.equal(data, 'BEST MATCHING');
         done();
-      })
+      });
     });
   });
 
@@ -189,7 +188,7 @@ describe('WILDCARDS', function() {
       matchingworker.start();
       client.start();
 
-    })
+    });
 
     afterEach(function() {
       matchingworker.stop();
@@ -202,7 +201,7 @@ describe('WILDCARDS', function() {
         assert.equal(type, 0);
         assert.equal(data, 'BEST MATCHING');
         done();
-      })
+      });
     });
   });
 });

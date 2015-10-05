@@ -37,7 +37,8 @@
     "mocha": "~2.2.5"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "lint": "eslint --config .eslintrc --fix index.js lib/ test/"
   },
   "license": "MIT",
   "repository": {
@@ -47,5 +48,8 @@
   "bugs": {
     "url": "https://github.com/prdn/pigato/issues"
   },
-  "homepage": "https://github.com/prdn/pigato"
+  "homepage": "https://github.com/prdn/pigato",
+  "optionalDependencies": {
+    "eslint": "~1.6.0"
+  }
 }

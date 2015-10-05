@@ -29,7 +29,7 @@ describe('TIMEOUT', function() {
     broker.stop();
   });
 
-  describe('When a server is launched', function(done) {
+  describe('When a server is launched', function() {
 
     before(function(done) {
       worker.start();
@@ -47,12 +47,11 @@ describe('TIMEOUT', function() {
         chai.assert.equal(data, chunk + ':bar');
       })
       .on('end', done);
-
     });
   });
 
 
-  describe('When a server is stop', function(done) {
+  describe('When a server is stop', function() {
 
     before(function(done) {
       worker.stop();
@@ -72,7 +71,7 @@ describe('TIMEOUT', function() {
   });
 
 
-  describe('When we launch a server during a request', function(done) {
+  describe('When we launch a server during a request', function() {
 
     it('can reach the server and answer', function(done) {
 
@@ -104,7 +103,7 @@ describe('TIMEOUT', function() {
   });
 
 
-  describe('After that I can do something fast', function(done) {
+  describe('After that I can do something fast', function() {
 
     it('can reach the server and answer', function(done) {
       client.request(ns, chunk, {

@@ -2,9 +2,8 @@ var PIGATO = require('../');
 var chai = require('chai');
 var uuid = require('node-uuid');
 
-var location = 'inproc://#';
-
-var bhost = location + uuid.v4();
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
 var broker;
 var ds;
@@ -15,7 +14,7 @@ var brokerConf = {};
 describe('DIRECTORY', function() {
 
   beforeEach(function(done) {
-    brokerConf.intch = "ipc:///tmp/" + uuid.v4();
+    brokerConf.intch = 'ipc:///tmp/' + uuid.v4();
 
     broker = new PIGATO.Broker(bhost, brokerConf);
 
@@ -25,7 +24,7 @@ describe('DIRECTORY', function() {
       });
       ds.conf.onStart = done;
       ds.start();
-    }
+    };
 
     broker.start();
   });
@@ -54,7 +53,7 @@ describe('DIRECTORY', function() {
         });
         worker.start();
         return worker;
-      };
+      }
 
       client.start();
 
@@ -124,7 +123,7 @@ describe('DIRECTORY', function() {
         });
         worker.start();
         return worker;
-      };
+      }
 
       client.start();
 
@@ -178,7 +177,7 @@ describe('DIRECTORY', function() {
         client.stop();
         done(err);
       }
-    })
+    });
   });
 
 });

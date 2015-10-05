@@ -2,8 +2,8 @@ var PIGATO = require('../');
 var chai = require('chai');
 var uuid = require('node-uuid');
 
-var location = 'inproc://#';
-var bhost = location + uuid.v4();
+var bhost = 'inproc://#' + uuid.v4();
+//var bhost = 'tcp://0.0.0.0:2020';
 
 var broker = new PIGATO.Broker(bhost);
 
@@ -36,8 +36,8 @@ describe('SEMVER', function() {
     var workerId = worker.conf.name;
     client.request(ns, 'foo')
     .on('data', function(data) {
-        chai.assert.equal(data, workerId);
-      })
+      chai.assert.equal(data, workerId);
+    })
       .on('error', function(err) {
         stop(err);
       })
