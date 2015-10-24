@@ -1,6 +1,6 @@
 # PIGATO CHANGELOG
 
-### v0.0.43-dev
+### v0.0.43
 * Js lint
 * BREAKING: Worker and Client now must specificy 'prefix' instead of 'name'. The socket identifier is generated using 'prefix' followed by a random uuid. This fixes issues in socket identifier overlapping.
 * Support for Worker semver
