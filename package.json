@@ -20,8 +20,8 @@
     "debug": "~2.2.0",
     "es6-shim": "^0.33.13",
     "lodash": "~4.2.1",
-    "node-uuid": "~1.4.2",
-    "readable-stream": "~2.0.4",
+    "node-uuid": "~1.4.7",
+    "readable-stream": "~2.0.5",
     "semver": "^5.0.3",
     "zmq": "~2.14.0"
   },
