@@ -1,5 +1,8 @@
 # PIGATO CHANGELOG
 
+### v0.0.45
+* Minor fix
+
 ### v0.0.44
 * Improved internal structures.
 * Added support for Worker liveness refresh via Client.
