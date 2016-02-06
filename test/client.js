@@ -494,13 +494,13 @@ describe('Client', function() {
       if (type.toString() == MDP.W_REQUEST) {
         requestId = rid.toString();
       } else if (type.toString() == MDP.W_HEARTBEAT) {
-        rid = topic;
         heartbeatCount++;
 
         assert.ok(requestId);
         assert.include(id.toString(), client.conf.prefix);
         assert.equal(MDP.CLIENT, clazz.toString());
         assert.equal(MDP.W_HEARTBEAT, type.toString());
+        assert.equal(topic, "request");
         assert.equal(requestId, rid.toString());
       }
 
@@ -524,8 +524,8 @@ describe('Client', function() {
     var heartbeatCount = 0;
     var heartbeatContent = ['ONE', 'TWO', 'THREE', 'THREE'];
 
-    mockBroker.on('message', function(id, clazz, type, rid) {
-      if (type.toString() == MDP.W_HEARTBEAT && rid == undefined) {
+    mockBroker.on('message', function(id, clazz, type, topic, rid) {
+      if (type.toString() == MDP.W_HEARTBEAT && topic == undefined) {
         mockBroker.send([id, clazz, MDP.W_HEARTBEAT]);
         return;
       }
