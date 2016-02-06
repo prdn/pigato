@@ -19,6 +19,6 @@ before_install:
 - cd ..
 language: node_js
 node_js:
-- "0.12"
-- "iojs-v2.5.0"
+- "4.2"
+- "5.5"
 script: travis_retry npm test
