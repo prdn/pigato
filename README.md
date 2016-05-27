@@ -1,7 +1,7 @@
 PIGATO
 ========
 
-[![PIGATO](http://ardoino.com/pub/pigato-200.png)](https://github.com/prdn/pigato)
+Checkout **[Grenache](https://github.com/bitfinexcom/grenache)** , a DHT based high-performance microservices framework for Node.js, Ruby and Go. Supports ZeroMQ and WebSocket transports.
 
 **PIGATO - an high-performance Node.js microservices framework based on ZeroMQ**
 
