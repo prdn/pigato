@@ -6,7 +6,7 @@ var PIGATO = require('../');
 
 var chai = require('chai');
 var assert = chai.assert;
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 
 var location = 'inproc://#';
 var bhost;

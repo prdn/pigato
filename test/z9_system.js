@@ -2,7 +2,7 @@ var PIGATO = require('../');
 var zmq = require('zmq');
 var chai = require('chai');
 var assert = chai.assert;
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 
 var bhost = 'inproc://#' + uuid.v4();
 //var bhost = 'tcp://0.0.0.0:2020';
