@@ -1,7 +1,5 @@
-var fs = require('fs');
 var Client = require('./../../index').Client;
-
-var conf = JSON.parse(fs.readFileSync(__dirname + '/../config.json', 'UTF-8'));
+var conf = require('../config.json');
 
 var client = new Client(conf.broker.host);
 client.start();
