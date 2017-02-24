@@ -302,7 +302,6 @@ client.request(
 
 ## Follow me
 
-* Fincluster - cloud financial investments platform : [fincluster](https://fincluster.com) /  [@fincluster](https://twitter.com/fincluster)
 * My personal blog : [ardoino.com](http://ardoino.com) / [@paoloardoino](https://twitter.com/paoloardoino)
 
 ## Contributors
