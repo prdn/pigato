@@ -1,8 +1,8 @@
 {
   "name": "pigato",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "private": false,
-  "description": "An high-performance Node.js microservices framework based on ZeroMQ",
+  "description": "A high-performance Node.js microservices framework based on ZeroMQ",
   "author": "prdn <paolo.ardoino@gmail.com> (http://ardoino.com/)",
   "keywords": [
     "pigato",
