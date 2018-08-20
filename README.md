@@ -64,7 +64,7 @@ node examples/stocks/client
 
 More examples
 
-[PIGATO-EXAMPLES](https://github.com/fincluster/pigato-examples) : a collection of multi-purpose useful examples.
+[PIGATO-EXAMPLES](https://github.com/prdn/pigato-examples) : a collection of multi-purpose useful examples.
 
 ### Performance
 
